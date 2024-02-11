@@ -11,7 +11,7 @@ services:
    - ./code-dev/public:/var/www/html
   networks:
    stockssys_net:
-    ipv4_address: 173.23.100.20
+    ipv4_address: 172.23.100.10
 volumes:
  code-dev:
 networks:
@@ -21,4 +21,4 @@ networks:
    driver: default
    config:
     -
-     subnet: 173.23.100.0/24
+     subnet: 172.23.100.0/24
