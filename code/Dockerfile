@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache2
 
 RUN apt-get update && apt-get install -y \
 && docker-php-ext-install mysqli pdo pdo_mysql
@@ -42,8 +42,8 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
     && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
     && apt-get update \
     && apt-get -y --no-install-recommends install msodbcsql18 unixodbc-dev \
-    && pecl install sqlsrv-5.12.0 \
-    && pecl install pdo_sqlsrv-5.12.0 \
+    && pecl install sqlsrv \
+    && pecl install pdo_sqlsrv \
     && echo "extension=pdo_sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini \
     && echo "extension=sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-sqlsrv.ini \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
