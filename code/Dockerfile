@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
 && docker-php-ext-install mysqli pdo pdo_mysql
@@ -37,16 +37,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils libzi
     ## Clean-up
     && rm -rf /var/lib/apt/lists/*
     
-# Install MS ODBC Driver for SQL Server
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+## MSSQL Tools, UNIX ODBC, SQL lite 3 for PHP
+RUN apt-get update \
+    && apt-get install apt-transport-https ca-certificates -y \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
     && apt-get update \
-    && apt-get -y --no-install-recommends install msodbcsql18 unixodbc-dev \
-    && pecl install sqlsrv-5.12.0 \
-    && pecl install pdo_sqlsrv-5.12.0 \
-    && echo "extension=pdo_sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini \
-    && echo "extension=sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-sqlsrv.ini \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    && ACCEPT_EULA=Y apt-get install msodbcsql17 -y \
+    && ACCEPT_EULA=Y apt-get install mssql-tools -y \
+    && echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile \
+    && echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
+    && apt-get install unixodbc-dev
+
+## PDO SQL Server
+RUN echo extension=pdo_sqlsrv.so >> /etc/php/7.2/fpm/conf.d/30-pdo_sqlsrv.ini \
+    && echo extension=sqlsrv.so >> /etc/php/7.2/fpm/conf.d/20-sqlsrv.ini \
+    && echo extension=pdo_sqlsrv.so >> /etc/php/7.2/cli/conf.d/30-pdo_sqlsrv.ini \
+    && echo extension=sqlsrv.so >> /etc/php/7.2/cli/conf.d/20-sqlsrv.ini \
+    && pecl install sqlsrv \
+    && pecl install pdo_sqlsrv
     
 
 # Install composer
