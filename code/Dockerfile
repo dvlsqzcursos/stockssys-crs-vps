@@ -48,6 +48,12 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
     && echo "extension=sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-sqlsrv.ini \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+# Install composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');" \
+    && mv composer.phar /usr/local/bin/composer
+
 RUN a2enmod rewrite
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
