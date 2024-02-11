@@ -1,4 +1,4 @@
-FROM php:8.2-apache2
+FROM php:8.2-apache-buster
 
 RUN apt-get update && apt-get install -y \
 && docker-php-ext-install mysqli pdo pdo_mysql
@@ -38,15 +38,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils libzi
     && rm -rf /var/lib/apt/lists/*
     
 # Install MS ODBC Driver for SQL Server
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+RUN apt update && apt install -y unixodbc-dev gpg libzip-dev \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
     && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install msodbcsql18 unixodbc-dev \
+    && apt update \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
     && pecl install sqlsrv \
     && pecl install pdo_sqlsrv \
-    && echo "extension=pdo_sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini \
-    && echo "extension=sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-sqlsrv.ini \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    && docker-php-ext-install pdo opcache bcmath zip \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && echo 'extension=sqlsrv.so' >> "$PHP_INI_DIR/php.ini" \
+    && echo 'extension=pdo_sqlsrv.so' >> "$PHP_INI_DIR/php.ini" \
+    && a2enmod rewrite
     
 
 # Install composer
