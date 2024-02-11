@@ -38,20 +38,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils libzi
     && rm -rf /var/lib/apt/lists/*
     
 # Install MS ODBC Driver for SQL Server
-RUN apt-get update \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/9/prod.list \
-        > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get install -y --no-install-recommends \
-        locales \
-        apt-transport-https \
-    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-    && locale-gen \
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
     && apt-get update \
-    && apt-get -y --no-install-recommends install \
-        unixodbc-dev \
-        msodbcsql17
-
+    && apt-get -y --no-install-recommends install msodbcsql17 unixodbc-dev \
+    && pecl install sqlsrv \
+    && pecl install pdo_sqlsrv \
+    && echo "extension=pdo_sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini \
+    && echo "extension=sqlsrv.so" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-sqlsrv.ini \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    
 RUN docker-php-ext-install mbstring pdo pdo_mysql \
     && pecl install sqlsrv pdo_sqlsrv xdebug \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv xdebug
@@ -83,6 +79,5 @@ RUN chmod -R 755 /var/www/storage/logs
 #RUN chmod -R 755 /var/www/storage/logs/laravel.log
 
 WORKDIR /var/www
-
 
 
