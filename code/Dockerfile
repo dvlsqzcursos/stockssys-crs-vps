@@ -54,6 +54,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/local/bin/composer
 
+RUN apt-get install nano -y
+
 RUN a2enmod rewrite
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
