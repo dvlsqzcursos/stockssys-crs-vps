@@ -5,17 +5,17 @@ services:
    context: ./
    dockerfile: Dockerfile
   ports:
-   - 8200:80
+   - 8000:80
   volumes:
    - ./code-dev:/var/www
    - ./code-dev/public:/var/www/html
   networks:
-   agem_dev_net:
+   stockssys_net:
     ipv4_address: 173.23.100.20
 volumes:
  code-dev:
 networks:
- agem_dev_net:
+ stockssys_net:
   driver: bridge
   ipam:
    driver: default
