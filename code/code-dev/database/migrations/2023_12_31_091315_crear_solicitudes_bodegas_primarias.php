@@ -15,7 +15,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->date('fecha');
             $table->integer('id_bodega_primaria');
-            $table->integer('id_socio_solicitante');
+            $table->integer('id_socio_solicitante');            
+            $table->integer('beneficiarios')->nullable();
+            $table->integer('raciones_solicitadas')->nullable();
             $table->string('observaciones', 500)->nullable();
             $table->integer('estado')->nullable();
             $table->integer('id_institucion');

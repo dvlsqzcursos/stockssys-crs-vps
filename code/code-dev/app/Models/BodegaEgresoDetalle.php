@@ -17,4 +17,8 @@ class BodegaEgresoDetalle extends Model
     public function alimento_bodega_socio(){
         return $this->hasOne(Bodega::class,'id','id_insumo');
     }
+
+    public function insumo(){
+        return $this->hasOne(Bodega::class,'id','id_insumo');
+    }
 }

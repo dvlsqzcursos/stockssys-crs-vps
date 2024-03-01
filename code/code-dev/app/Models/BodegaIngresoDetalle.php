@@ -13,4 +13,8 @@ class BodegaIngresoDetalle extends Model
 
     protected $table = 'bodegas_ingresos_detalles';
     protected $hidden = ['created_at', 'updated_at'];
+
+    public function insumo(){
+        return $this->hasOne(Bodega::class,'id','id_insumo');
+    }
 }

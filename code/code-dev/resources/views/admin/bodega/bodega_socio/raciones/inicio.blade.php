@@ -34,7 +34,12 @@
             <div class="card ">
 
                 <div class="card-header">
-                    <h2 class="title"><i class="fa-solid fa-bowl-rice"></i> <strong> Listados de Raciones</strong></h2>
+                    <h2 class="card-title"><i class="fa-solid fa-bowl-rice"></i> <strong> Listados de Raciones</strong></h2>
+                    <ul>                                             
+                        <li>
+                            <a href="{{ url('/admin/bodega_socio/insumos') }}" ><i class="fa-solid fa-circle-arrow-left"></i> Regresar</a>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="card-body">

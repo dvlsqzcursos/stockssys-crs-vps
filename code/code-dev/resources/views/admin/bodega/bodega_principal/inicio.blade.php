@@ -93,15 +93,16 @@
 
                 <div class="card-body">              
                     <div class="d-grid gap-2">
+                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_solicitudes'))
+                            <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/solicitudes_socios') }}" title="Solicitudes de Socios"><i class="fa-solid fa-file"></i> Solicitudes de Socios</a>
+                        @endif
                         @if(kvfj(Auth::user()->permisos, 'bodega_principal_ingresos'))
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/insumo/ingresos') }}" title="Ingresos"><i class="fas fa-plus-circle"></i> Ingresos</a>
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'bodega_principal_egresos'))
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/insumo/egresos') }}" title="Egresos"><i class="fas fa-minus-circle"></i> Egresos</a>
                         @endif
-                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_raciones'))
-                            <a class="btn btn-outline-primary" href="{{ url('/admin/raciones/1') }}" title="raciones"><i class="fas fa-plus-circle"></i> Raciones</a>
-                        @endif
+                        
                     </div>
                 </div>
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('id_socio_despacho')->nullable();     
             $table->integer('id_solicitud_despacho')->nullable(); 
             $table->integer('id_escuela_despacho')->nullable(); 
+            $table->integer('participantes')->nullable();
             $table->integer('tipo_racion')->nullable();   
             $table->integer('tipo_kit')->nullable();  
             $table->string('destino')->nullable();         

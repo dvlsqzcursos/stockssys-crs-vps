@@ -14,6 +14,14 @@ class SolicitudBodegaPrimaria extends Model
     protected $table = 'solicitudes_bodegas_primarias';
     protected $hidden = ['created_at', 'updated_at'];
 
+    public function bodega_primaria(){
+        return $this->hasOne(Institucion::class,'id','id_bodega_primaria');
+    }
+
+    public function socio(){
+        return $this->hasOne(Institucion::class,'id','id_socio_solicitante');
+    }
+
     public function detalles(){
         return $this->hasMany(SolicitudBodegaPrimariaDetalle::class,'id_solicitud_bodega_primaria','id');
     }

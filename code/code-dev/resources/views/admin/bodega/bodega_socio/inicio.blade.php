@@ -101,8 +101,10 @@
                             <a  href="#" data-action="ingresos" data-path="admin/bodega_socio/insumo"  class="btn-eliminar btn btn-outline-primary" data-toogle="tooltrip" data-placement="top" title="Ingresos" ><i class="fas fa-plus-circle"></i> Ingresos</a>
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'bodega_socio_egresos'))
-                            <a  href="#" data-action="egresos" data-path="admin/bodega_socio/insumo"  class="btn-eliminar btn btn-outline-primary" data-toogle="tooltrip" data-placement="top" title="Egresos" ><i class="fas fa-minus-circle"></i> Egresos</a> 
-                            
+                            <a  href="#" data-action="egresos" data-path="admin/bodega_socio/insumo"  class="btn-eliminar btn btn-outline-primary" data-toogle="tooltrip" data-placement="top" title="Egresos" ><i class="fas fa-minus-circle"></i> Egresos</a>  
+                        @endif
+                        @if(kvfj(Auth::user()->permisos, 'bodega_socio_egresos'))
+                            <a  href="#" data-action="movimientos" data-path="admin/bodega_socio/insumo"  class="btn-eliminar btn btn-outline-primary" data-toogle="tooltrip" data-placement="top" title="Egresos" ><i class="fa-solid fa-clock-rotate-left"></i> Ver Historial de Movimientos</a>  
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'bodega_socio_raciones'))
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_socio/raciones/1') }}" title="raciones"><i class="fa-solid fa-bowl-rice"></i> Raciones</a>

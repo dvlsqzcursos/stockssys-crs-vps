@@ -34,7 +34,7 @@
                                 <label for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Tipo De Documento: </strong></label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
-                                    {!! Form::select('tipo_documento', ['0'=>'Boleta de Despacho','1'=>'Otros'],0,['class'=>'form-select']) !!}
+                                    {!! Form::select('tipo_documento', obtenerDocumentosEgreso('list', null),0,['class'=>'form-select']) !!}
                                 </div>
                             </div>  
 

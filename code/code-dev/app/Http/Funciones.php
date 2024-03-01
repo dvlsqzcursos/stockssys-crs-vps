@@ -61,7 +61,7 @@
 
     function obtenerDocumentosEgreso($modo, $id){
         $documento = [
-            '1'=>'Guia de Transporte Terrestre',
+            '1'=>'Boleta de Despacho',
             '2'=>'Factura',
             '3'=>'Recibo',
             '4'=>'Otro',
@@ -72,6 +72,21 @@
             return $documento;
         else:
             return $documento[$id];
+        endif;
+    }
+
+    function obtenerEstadoSolicitud($modo, $id){
+        $estado = [
+            '1'=>'Registrada y Enviada Digitalmente',
+            '2'=>'Aceptada',
+            '3'=>'Rechazada'
+        ];
+
+        
+        if(!is_null($modo)):
+            return $estado;
+        else:
+            return $estado[$id];
         endif;
     }
 
@@ -128,8 +143,7 @@
         $ob = [
             '0' => 'Estudiantes',
             '1' => 'Lideres',
-            '2' => 'Voluntarios',
-            '3' => 'Docentes',
+            '2' => 'Docentes y Voluntarios',
         ];
 
         if(!is_null($modo)):
@@ -270,7 +284,8 @@
                     'bodega_principal_eliminar' => 'Puede eliminar registros de la bodega principal.',
                     'bodega_principal_ingresos' => 'Puede registrar ingresos a la bodega principal.',    
                     'bodega_principal_egresos' => 'Puede registrar egresos a la bodega principal.',                      
-                    'bodega_principal_raciones' => 'Puede ver el listado de raciones.'
+                    'bodega_principal_solicitudes' => 'Puede ver el listado de solicitudes de socios.',
+                    'bodega_principal_movimientos' => 'Puede ver el historial de movimientos de la bodega.',
                 ]
             ],
             'bodegas_socios' => [
@@ -284,6 +299,7 @@
                     'bodega_socio_solicitudes' => 'Puede ver el listado y detalle de solicitudes a bodega primaria.',
                     'bodega_socio_ingresos' => 'Puede registrar ingresos a la bodega socio.',    
                     'bodega_socio_egresos' => 'Puede registrar egresos a la bodega socio.',  
+                    'bodega_socio_movimientos' => 'Puede ver el historial de movimientos de la bodega.',
                     'bodega_socio_raciones' => 'Puede ver el listado de raciones.',
                     'bodega_socio_racion_registrar' => 'Puede agregar nuevas raciones.',
                     'bodega_socio_racion_editar' => 'Puede editar raciones.',
@@ -293,7 +309,7 @@
                     'bodega_socio_kit_registrar' => 'Puede agregar nuevas kits.',
                     'bodega_socio_kit_editar' => 'Puede editar kits.',
                     'bodega_socio_kit_eliminar' => 'Puede eliminar kits.',
-                    'bodega_socio_kit_insumos' => 'Puede crear, editar y eliminar insumos que conforman las kits.', 
+                    'bodega_socio_kit_insumos' => 'Puede crear, editar y eliminar insumos que conforman las kits.',  
                 ]
             ],
             'solicitudes' => [

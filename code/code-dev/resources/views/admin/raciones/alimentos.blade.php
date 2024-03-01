@@ -23,7 +23,7 @@
 
                         {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
                     {!! Form::close() !!}
-                </div>
+                </div> 
 
             </div>
             
@@ -34,6 +34,11 @@
 
                 <div class="card-header">
                     <h2 class="title"><i class="fa-solid fa-bowl-rice"></i> <strong> Listados de Alimentos Que Conforman La Ración: </strong> {{ $racion->nombre }}</h2>
+                    <ul>                                             
+                        <li>
+                            <a href="{{ url('/admin/institucion/registrar') }}" ><i class="fas fa-plus-circle"></i> Regresar</a>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="card-body">

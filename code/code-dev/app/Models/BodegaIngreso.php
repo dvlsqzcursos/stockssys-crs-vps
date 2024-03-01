@@ -17,4 +17,8 @@ class BodegaIngreso extends Model
     public function detalles(){
         return $this->hasMany(BodegaIngresoDetalle::class, 'id_ingreso', 'id');
     }
+
+    public function institucion(){
+        return $this->hasOne(Institucion::class,'id','id_bodega_despacho');
+    }
 }

@@ -58,6 +58,7 @@ class RutaController extends Controller
 
     public function getRutaEliminar($id){
         $ruta = Ruta::findOrFail($id);
+        $detalles = RutaEscuela::where('id_ruta',$id)->delete();
 
         if($ruta->delete()):
             $b = new Bitacora;

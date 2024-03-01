@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Bodega, App\Models\BodegaIngreso, App\Models\BodegaIngresoDetalle, App\Models\BodegaEgreso, App\Models\BodegaEgresoDetalle;
 use App\Models\PesoInsumo, App\Models\Insumo, App\Models\Institucion,App\Models\Solicitud, App\Models\SolicitudDetalles, App\Models\Bitacora, App\Models\SolicitudBodegaPrimaria;
 use Validator, Auth, Hash, Config, DB, Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BodegaSocioController extends Controller
 {
@@ -244,7 +245,15 @@ class BodegaSocioController extends Controller
     	if($validator->fails()):
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
+            $alimentos = Bodega::whereNotIn('id', $request->get('idinsumo'))->where('categoria' , 0)->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->orderBy('id', 'Asc')->get();
             DB::beginTransaction();
+
+                $participantes = SolicitudDetalles::select(DB::RAW('SUM(total_de_personas) as total'))->where('id_solicitud', $request->input('id_solicitud'))
+                    ->where('id_escuela', $request->input('id_escuela'))
+                    ->where('tipo_de_actividad_alimentos', $request->input('tipo_racion'))
+                    ->first();
+                
+                //return $participantes;
 
                 $be = new BodegaEgreso;
                 $be->fecha = $request->input('fecha_egreso');
@@ -254,6 +263,7 @@ class BodegaSocioController extends Controller
                 $be->id_escuela_despacho = $request->input('id_escuela');
                 $be->tipo_racion = $request->input('tipo_racion');
                 $be->destino = $request->input('destino');
+                $be->participantes = $participantes->total;
                 $be->tipo_bodega = 1;
                 $be->id_institucion = Auth::user()->id_institucion;
                 $be->save();
@@ -272,6 +282,15 @@ class BodegaSocioController extends Controller
                     $detalle->save();
                     $cont=$cont+1;
                 }
+
+                foreach($alimentos as $a):
+                    $detalle=new BodegaEgresoDetalle();
+                    $detalle->id_egreso = $be->id;
+                    $detalle->id_insumo = $a->id;
+                    $detalle->pl = 0;
+                    $detalle->no_unidades = 0;
+                    $detalle->save();
+                endforeach;
 
             DB::commit();
 
@@ -311,6 +330,7 @@ class BodegaSocioController extends Controller
     	if($validator->fails()):
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
+            
             DB::beginTransaction();
 
                 $be = new BodegaEgreso;
@@ -328,15 +348,23 @@ class BodegaSocioController extends Controller
                 $idinsumo=$request->get('idinsumo');
                 $no_unidades=$request->get('no_unidades');
                 $cont=0;
+                
+                while ($cont<count($idinsumo)):
+                    
 
-                while ($cont<count($idinsumo)) {
                     $detalle=new BodegaEgresoDetalle();
                     $detalle->id_egreso = $be->id;
                     $detalle->id_insumo = $idinsumo[$cont];
                     $detalle->no_unidades = $no_unidades[$cont];
                     $detalle->save();
+                    
                     $cont=$cont+1;
-                }
+                endwhile;
+
+                
+                
+
+                
 
             DB::commit();
 
@@ -351,6 +379,51 @@ class BodegaSocioController extends Controller
     		endif;
         endif;
     }
+
+    public function getMovimientosIngresos(){ 
+        $ingresos = BodegaIngreso::where('id_institucion',Auth::user()->id_institucion)->get();
+
+        $datos = [
+            'ingresos' => $ingresos
+        ];
+        
+        return view('admin.bodega.bodega_socio.movimientos.historial_ingresos' ,$datos);
+    }
+
+    public function getMovimientosIngresoDetalle($id){ 
+        $ingresos = BodegaIngreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        $detalles = BodegaIngresoDetalle::where('id_ingreso', $id)->get();
+
+        $datos = [
+            'ingresos' => $ingresos,
+            'detalles' => $detalles
+        ];
+        
+        return view('admin.bodega.bodega_socio.movimientos.historial_ingresos_detalles' ,$datos);
+    }
+
+    public function getMovimientosEgresos(){ 
+        $egresos = BodegaEgreso::where('id_institucion',Auth::user()->id_institucion)->get();
+
+        $datos = [
+            'egresos' => $egresos
+        ];
+        
+        return view('admin.bodega.bodega_socio.movimientos.historial_egresos' ,$datos);
+    }
+
+    public function getMovimientosEgresoDetalle($id){ 
+        $egresos = BodegaEgreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        $detalles = BodegaEgresoDetalle::where('id_egreso', $id)->get();
+
+        $datos = [
+            'egresos' => $egresos,
+            'detalles' => $detalles
+        ];
+        
+        return view('admin.bodega.bodega_socio.movimientos.historial_egresos_detalles' ,$datos);
+    }
+    
 
     public function getInsumoEliminar($id){
         $insumo = Bodega::findOrFail($id);
@@ -483,6 +556,20 @@ class BodegaSocioController extends Controller
 
         return view('admin.bodega.bodega_socio.solicitudes_insumos', $datos);
     }
+
+    public function getSolicitudesBodegaPrimariaPDF($id){
+        $solicitud = SolicitudBodegaPrimaria::findOrFail($id);
+        
+        $datos = [
+            'solicitud' => $solicitud
+        ];
+
+        $pdf = Pdf::loadView('admin.bodega.bodega_socio.solicitud_insumos_pdf', $datos)->setPaper('letter');
+     
+        return $pdf->stream();
+    }
+
+    
 
     public function getPlDisponiblesAlimento($id){
         $pls = BodegaIngresoDetalle::select('pl')

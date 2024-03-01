@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('solicitudes_bodegas_primarias_detalles', function (Blueprint $table) {
+        Schema::create('bodegas_socios_ingresos_detalles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('id_solicitud_bodega_primaria');
-            $table->integer('tipo_racion');
-            $table->integer('id_insumo_bodega_primaria');
-            $table->integer('id_insumo_bodega_socio');
+            $table->integer('id_ingreso');
+            $table->integer('id_insumo');
+            $table->integer('pl');
             $table->double('no_unidades',13, 5);
-            $table->integer('id_unidad_medida')->nullable(); 
+            $table->double('unidad_medida',13, 5);
+            $table->double('peso_total',13, 5);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('solicitudes_bodegas_primarias_detalles');
+        Schema::dropIfExists('bodegas_socios_ingresos_detalles');
     }
 };

@@ -10,8 +10,11 @@ use App\Models\Ruta, App\Models\RutaEscuela,  App\Models\RutaSolicitud,  App\Mod
 use App\Models\AlimentoRacion, App\Models\Usuario, App\Models\Bitacora, App\Models\SolicitudBodegaPrimaria, App\Models\SolicitudBodegaPrimariaDetalle;
 use DB, Validator, Auth, Hash, Config, Carbon\Carbon, Illuminate\Support\Arr;
 use App\Imports\SolicitudDetallesImport;
+use App\Exports\GuiaTerrestreExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Elibyy\TCPDF\Facades\TCPDF;
+
 
 class SolicitudController extends Controller
 {
@@ -326,9 +329,27 @@ class SolicitudController extends Controller
             'despachos' => $despachos 
         ];
 
+        $ancho = 612; //8 1/2 
+        $largo = 396; //5 1/2 
+        $customPaper = array(0,0,$largo,$ancho);
         $pdf = Pdf::loadView('admin.solicitudes.boletas_despacho.pdf', $datos);
      
         return $pdf->stream();
+        
+        /*$filename = 'boleta despacho.pdf';
+    	$view = \View::make('admin.solicitudes.boletas_despacho.pdf', $datos);
+        $html = $view->render();
+        $ancho = 612; //8 1/2 
+        $largo = 396; //5 1/2 
+    	$pageLayout = array($ancho, $largo); //  or array($height, $width) 
+        $pdf = new TCPDF('l', 'pt', $pageLayout, true, 'UTF-8', false);
+        $pdf::SetTitle($filename);
+        $pdf::AddPage();
+        $pdf::writeHTML($html, true, false, true, false, '');
+
+        $pdf::Output(public_path($filename), 'F');
+
+        return response()->download(public_path($filename));*/
           
     }
 
@@ -676,7 +697,7 @@ class SolicitudController extends Controller
 
     public function getSolicitudSubRutaEliminar($id){
         $ruta = RutaSolicitud::findOrFail($id);
-        $detalles = RutaSolicitudDetalles::where('id_ruta_despacho',$id)->delete();
+        $detalles = RutaSolicitudDetalles::where('id_ruta_despacho',$id)->delete(); 
 
         $nombre = $ruta->nombre;
         $solicitud = $ruta->id_solicitud;
@@ -697,6 +718,9 @@ class SolicitudController extends Controller
     public function getSolicitudRutasConfirmadas($id){
         $idSolicitud = $id;
         $rutas = RutaSolicitud::with('ruta_base')->where('id_solicitud_despacho',$id)->get();
+        $raciones = Racion::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
+
+        
         $detalle_escuelas = DB::table('solicitud_detalles')
             ->select(
                 DB::raw('escuelas.id as escuela_id'),
@@ -705,16 +729,16 @@ class SolicitudController extends Controller
             )
             ->join('escuelas', 'escuelas.id', 'solicitud_detalles.id_escuela')
             ->join(DB::RAW("(SELECT id_racion, SUM(cantidad) as peso FROM alimentos_raciones GROUP BY id_racion) as alimentos_racion"), function($j){
-                $j->on("alimentos_racion.id_racion","=","solicitud_detalles.tipo_de_actividad_alimentos");
+                $j->on("alimentos_racion.id_racion","=","solicitud_detalles.tipo_de_actividad_alimentos"); 
             })
-            ->where('solicitud_detalles.id_solicitud', $id)            
-            ->where('solicitud_detalles.deleted_at', null)
-            ->whereIn('solicitud_detalles.tipo_de_actividad_alimentos', [1,2,3])
+            ->where('solicitud_detalles.id_solicitud', $id) 
+            ->whereIn('solicitud_detalles.tipo_de_actividad_alimentos', $raciones)
             ->groupBy('escuelas.id', 'solicitud_detalles.tipo_de_actividad_alimentos','alimentos_racion.peso')
             ->get();
 
 
-        
+
+        //return $detalle_escuelas;
 
         $datos = [
             'rutas' => $rutas,
@@ -774,37 +798,90 @@ class SolicitudController extends Controller
     public function getSolicitudRutaConfirmadaPDF($idSolicitud, $idRuta){     
         
         $idSolicitud = $idSolicitud;
-        $ruta = RutaSolicitud::with('ruta_base')->where('id',$idRuta)->first();
-        $detalle_escuelas = DB::table('solicitud_detalles')
+        $ruta = RutaSolicitud::with(['ruta_base', 'detalles'])->where('id',$idRuta)->first();
+        
+        $detalle_escuelas = DB::table('rutas_solicitudes_despachos as r')   
             ->select(
-                DB::raw('escuelas.id as escuela_id'),
-                DB::raw('solicitud_detalles.tipo_de_actividad_alimentos as racion'),
-                DB::raw('( ( SUM(Distinct solicitud_detalles.dias_de_solicitud) * alimentos_racion.peso * SUM(Distinct solicitud_detalles.total_pre_primaria_a_tercero_primaria) + SUM(Distinct solicitud_detalles.dias_de_solicitud) * alimentos_racion.peso * SUM(Distinct solicitud_detalles.total_cuarto_a_sexto) + SUM(Distinct solicitud_detalles.dias_de_solicitud) * alimentos_racion.peso * SUM(Distinct solicitud_detalles.total_de_docentes_y_voluntarios)  ) ) as peso')
-            )
-            ->join('escuelas', 'escuelas.id', 'solicitud_detalles.id_escuela')
-            ->join(DB::RAW("(SELECT id_racion, SUM(cantidad) as peso FROM alimentos_raciones GROUP BY id_racion) as alimentos_racion"), function($j){
-                $j->on("alimentos_racion.id_racion","=","solicitud_detalles.tipo_de_actividad_alimentos");
-            })
-            ->where('solicitud_detalles.id_solicitud', $idSolicitud)            
-            ->where('solicitud_detalles.deleted_at', null)
-            ->whereIn('solicitud_detalles.tipo_de_actividad_alimentos', [1,2,3])
-            ->groupBy('escuelas.id', 'solicitud_detalles.tipo_de_actividad_alimentos','alimentos_racion.peso')
+                'e.id as escuela_id',
+                'e.codigo as escuela_codigo',
+                'e.nombre as escuela_nombre',
+                'be.id as egreso',
+                'be.participantes as participantes',
+                'ra.id as idracion',
+                'ra.nombre as racion',
+
+            )         
+            ->join('rutas_solicitudes_despachos_detalles as rdet', 'rdet.id_ruta_despacho', 'r.id')
+            ->join('escuelas as e', 'e.id', 'rdet.id_escuela')
+            ->join('bodegas_egresos as be', 'be.id_escuela_despacho', 'rdet.id_escuela')
+            ->join('raciones as ra', 'ra.id', 'be.tipo_racion')
+            ->where('r.id', $idRuta)
+            ->where('r.id_solicitud_despacho', $idSolicitud)       
+            ->orderby('e.id', 'ASC')  
             ->get();
-        $alimentos = Bodega::where('categoria' , 0)->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->get();
+
+        $totales_alimentos = DB::table('rutas_solicitudes_despachos as r')   
+            ->select(
+                'bdet.id_insumo as insumo',
+                DB::RAW('SUM(bdet.no_unidades) as total_insumo')
+            )         
+            ->join('rutas_solicitudes_despachos_detalles as rdet', 'rdet.id_ruta_despacho', 'r.id')
+            ->join('escuelas as e', 'e.id', 'rdet.id_escuela')
+            ->join('bodegas_egresos as be', 'be.id_escuela_despacho', 'rdet.id_escuela')
+            ->join('bodegas_egresos_detalles as bdet', 'bdet.id_egreso', 'be.id')
+            ->where('r.id', $idRuta)
+            ->where('r.id_solicitud_despacho', $idSolicitud)       
+            ->groupBy('bdet.id_insumo')  
+            ->get();
+
+        
+        
+        $detalles = $detalle_escuelas->map(function ($detalle_escuelas){
+            $detalles_alimentos = DB::table('bodegas_egresos_detalles as det')   
+            ->select(
+                'det.id_insumo',DB::raw('SUM(det.no_unidades) as no_unidades')
+
+            )      
+            ->where('det.id_egreso', $detalle_escuelas->egreso)
+            ->groupBy('det.id_insumo') 
+            ->get();
+
+
+            return collect([
+                'escuela_id' => $detalle_escuelas->escuela_id,
+                'idracion' => $detalle_escuelas->idracion,
+                'detalles_alimentos' => $detalles_alimentos->map(function ($detalles_alimentos){
+                    return [
+                        'id_insumo' => $detalles_alimentos->id_insumo,
+                        'no_unidades' => $detalles_alimentos->no_unidades,
+                    ];
+                }),
+            ]);
+        });
+
+        $deta[] = $detalles;
+
+
+
+        $alimentos = Bodega::where('categoria' , 0)->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->orderBy('id', 'Asc')->get();
         $solicitud = Solicitud::with(['entrega', 'usuario'])->where('id', $idSolicitud)->first();
         
-
+        
         $datos = [
             'ruta' => $ruta,
             'idSolicitud' => $idSolicitud,
             'detalle_escuelas' => $detalle_escuelas,
+            'detalles' => $detalles,
             'alimentos' => $alimentos,
+            'totales_alimentos' => $totales_alimentos, 
             'solicitud' => $solicitud
         ];
 
         $pdf = Pdf::loadView('admin.solicitudes.boleta_ruta_confirmada_pdf', $datos)->setPaper('letter');
      
         return $pdf->stream();
+
+
           
     }
 
@@ -834,7 +911,7 @@ class SolicitudController extends Controller
     }
 
     public function getEscuelasDespacho($id_solicitud){
-        $escuelas = SolicitudDetalles::with('escuela')->select('id_escuela')->where('id_solicitud', $id_solicitud)->groupBy('id_escuela')->get();
+        $escuelas = SolicitudDetalles::with('escuela')->select('id_escuela')->where('id_solicitud', $id_solicitud)->groupBy('id_escuela')->orderBy('id_escuela')->get();
 
         $datos = [
             'escuelas' => $escuelas
@@ -1083,6 +1160,8 @@ class SolicitudController extends Controller
             ->get();
 
         $bodegas = Institucion::where('nivel', 2)->pluck('nombre','id');
+
+        $raciones = Racion::select('id','tipo_alimentos')->where('id_institucion', Auth::user()->id_institucion)->get();
         
 
         $datos = [
@@ -1097,6 +1176,8 @@ class SolicitudController extends Controller
             'det_escuelas_v_d' => $det_escuelas_v_d,
             'alimentos' => $alimentos,
             'bodegas' => $bodegas,
+            'raciones' => $raciones,
+            'solicitud' => $solicitud
         ];
 
         return view('admin.solicitudes.solicitud_bodega',$datos);
@@ -1115,11 +1196,37 @@ class SolicitudController extends Controller
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
             DB::beginTransaction();
+                $tipo_alimentacion = $request->input('tipo_racion');                
+                $racion = Racion::select('tipo_alimentos')->where('id',$tipo_alimentacion)->first();
+
+                switch($racion->tipo_alimentos):
+                    case 'solicitud_comida_escolar':
+                        $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_estudiantes');
+                        $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones_de_estudiantes');
+
+                    break;
+
+                    case 'solicitud_racion_psc':
+                        $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_docentes_y_voluntarios');
+                        $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones_de_docentes_y_voluntarios');
+                    break;
+
+                    case 'lideres_de_alimentacion_escolar':
+                        $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_personas');
+                        $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones');
+                    break;
+
+
+                endswitch;
 
                 $s = new SolicitudBodegaPrimaria;
                 $s->fecha = Carbon::now()->format('Y-m-d');
                 $s->id_bodega_primaria = $request->input('id_bodega_primaria');
+                $s->beneficiarios = $total_beneficiarios;
+                $s->raciones_solicitadas = $total_raciones;
                 $s->id_socio_solicitante = Auth::user()->id_institucion;
+                $s->estado = 1;
+                $s->id_institucion = Auth::user()->id_institucion;
                 $s->save();
 
                 $idinsumo=$request->get('idinsumo');
@@ -1131,8 +1238,9 @@ class SolicitudController extends Controller
                     $detalle=new SolicitudBodegaPrimariaDetalle();
                     $detalle->id_solicitud_bodega_primaria = $s->id;
                     $detalle->id_insumo_bodega_socio = $idinsumo[$cont];
-                    $insumoBodegaSocioNombre = Bodega::where('id',$idinsumo[$cont])->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->first();                    
-                    $insumoIDBPrimaria = Bodega::where('nombre',$insumoBodegaSocioNombre->nombre)->where('tipo_bodega',0)->where('id_institucion', Auth::user()->id_institucion)->first();
+                    $insumoBodegaSocioNombre = Bodega::where('id',$idinsumo[$cont])->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->first();                
+                    $insumoIDBPrimaria = Bodega::where('nombre',$insumoBodegaSocioNombre->nombre)->where('tipo_bodega',0)->where('id_institucion', $s->id_bodega_primaria)->first();
+                    $detalle->tipo_racion = $tipo_alimentacion;
                     $detalle->id_insumo_bodega_primaria = $insumoIDBPrimaria->id;
                     $detalle->no_unidades = $cantidad[$cont];
                     $detalle->id_unidad_medida = $idmedida[$cont];

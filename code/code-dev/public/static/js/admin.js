@@ -15,12 +15,13 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_generar_usuario = document.getElementById('btn_generar_usuario');
     var btn_buscar_escuelas_despacho = document.getElementById('btn_buscar_escuelas_despacho');
     var btn_buscar_socios_solicitudes_despacho = document.getElementById('btn_buscar_socios_solicitudes_despacho');
+    var btn_historial_detalles = document.getElementById('btn_historial_detalles');
 
     if(route == 'bodega_socio_egresos'){
         plsSociosInsumosDisponibles();
         //var msg_det_escuelas = document.getElementById('div-msg-det-escuelas');
         //msg_det_escuelas.hidden = false;
-        //var res_det_escuelas = document.getElementById('div-res-det-escuelas');
+        //var res_det_escuelas = document.getElementById('div-res-det-escuelas'); 
         //res_det_escuelas.hidden = true;
     }
 
@@ -345,6 +346,74 @@ function delete_object(e){
                 window.location.href =url1+'/otros_insumos';
             }
         });
+    }else if(action == "movimientos"){
+        title = "¿Que tipo de movimientos desea visualizar?";
+        text = ""
+        icon = "warning";
+    
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Ingresos",
+            denyButtonText: "Egresos",
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#85c1e9',
+            denyButtonColor: '  #85929e',
+            cancelButtonColor: '#CC2D04',
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                //console.log(url1+'/alimentos');
+                window.location.href =url1+'/ingresos';
+            } else if (result.isDenied) {
+                //console.log(url1+'/otros_insumos');
+                window.location.href =url1+'/egresos';
+            }
+        });
+    }else if(action == "aceptar"){
+        title = "¿Esta seguro de aceptar la solicitud de insumo de socios?";
+        text = "Si acepta podra utilizar la solicitud para realizar despachos al socio ";
+        icon = "warning";
+    
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#22B81C',
+            cancelButtonColor: '#CC2D04',
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                //console.log(url);
+                window.location.href = url;
+            }
+        });
+    }
+    else if(action == "rechazar"){
+        title = "¿Esta seguro de rechazar la solicitud de insumo de socios?";
+        text = "Si rechaza no podra utilizar la solicitud para realizar despachos al socio ";
+        icon = "warning";
+    
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: 'Rechazar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#22B81C',
+            cancelButtonColor: '#CC2D04',
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                //console.log(url);
+                window.location.href = url;
+            }
+        });
     }
 
 
@@ -436,7 +505,7 @@ function obtenerSociosSolicitudes(){
 
             if('solicitudes' in data){ 
                 for(i=0; i<data.solicitudes.length; i++){
-                    select.innerHTML += "<option value=\""+data.solicitudes[i].id+"\" selected>"+data.solicitudes[i].fecha+"</option>";
+                    select.innerHTML += "<option value=\""+data.solicitudes[i].id+"\" selected>"+"No."+data.solicitudes[i].id+"- Fecha: "+data.solicitudes[i].fecha+"</option>";
                 }
 
             }
@@ -613,5 +682,6 @@ function plsPrincipalInsumosDisponibles(){
     
 
 }
+
 
 

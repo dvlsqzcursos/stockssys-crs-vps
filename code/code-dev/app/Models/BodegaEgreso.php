@@ -30,4 +30,8 @@ class BodegaEgreso extends Model
         return $this->hasOne(Racion::class,'id','tipo_racion');
     }
 
+    public function ruta_asignada(){
+        return $this->hasOne(RutaSolicitudDetalles::class,'id_escuela','id_escuela_despacho');
+    }
+
 }

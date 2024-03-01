@@ -30,11 +30,15 @@
                                     @foreach($r->detalles as $det)
                                             <p> 
                                                 <b>Escuela: </b>  {{$det->escuela->codigo.' / '.$det->escuela->nombre}} &nbsp
-                                                <b>Orden de Llegada:</b>  {{$det->orden_llegada}} &nbsp
+                                                <b>Orden de Llegada:</b>  {{$det->orden_llegada}} &nbsp 
                                                 @php($total_peso_escuela = 0)   
                                                 @foreach($detalle_escuelas as $det_esc)
                                                     @if($det->escuela->id == $det_esc->escuela_id)
-                                                        @php($total_peso_escuela = $total_peso_escuela + ($det_esc->peso/453.59237)/100  ) 
+                                                        @if($det_esc->racion == 4)
+                                                            @php($total_peso_escuela = $total_peso_escuela + ($det_esc->peso/453.59237)/100  ) 
+                                                        @else
+                                                            @php($total_peso_escuela = $total_peso_escuela + ($det_esc->peso/100) )
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                                 <b >Peso Total Escuela: </b> {{number_format(  $total_peso_escuela , 2, '.', ',' ) }}

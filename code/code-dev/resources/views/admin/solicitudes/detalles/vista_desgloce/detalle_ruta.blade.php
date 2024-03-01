@@ -52,7 +52,7 @@
                                     <b>Dias/Mes:</b> {{ $det3->dias }} <br>
                                     <b>No. Beneficiarios:</b> {{ $det3->total_personas }} <br>
                                     <b>Raciones:</b> {{ number_format($det3->dias * $det3->total_personas)}} <br>
-                                    <b>Peso de Raciones en Libras:</b> {{ number_format( ($det3->dias * $det3->total_personas * $det3->peso_racion), 2, '.', ',') }} <br> @php($total_peso_ruta = $total_peso_ruta + ($det3->dias * $det3->total_personas * $det3->peso_racion)  ) 
+                                    <b>Peso de Raciones en Libras:</b> {{ number_format( ($det3->dias * $det3->total_personas * $det3->peso_racion), 2, '.', ',') }} <br> @php($total_peso_ruta = $total_peso_ruta + ( ($det3->dias * $det3->total_personas * $det3->peso_racion)*453.59237)  ) 
                                     <b>Peso de Raciones en Quintales:</b> {{ number_format( (($det3->dias * $det3->total_personas * $det3->peso_racion)/100), 2, '.', ',' ) }} <br>  @php($total_peso_ruta_quintales = $total_peso_ruta_quintales + ((($det3->dias * $det3->total_personas * $det3->peso_racion)/100)))
                                     <b>Unidades de Racion:</b> {{ number_format( (($det3->dias * $det3->total_personas * $det3->peso_racion)/110), 2, '.', ',' ) }}
                                 </p> 
@@ -67,8 +67,8 @@
                                     <b>Dias/Mes:</b> {{ $det4->dias }} <br>
                                     <b>No. Beneficiarios:</b> {{ $det4->total_personas }} <br>
                                     <b>Raciones:</b> {{ number_format($det4->dias * $det4->total_personas)}} <br>
-                                    <b>Peso de Raciones en Libras:</b> {{ number_format( ($det4->dias * $det4->total_personas * $det4->peso_racion), 2, '.', ',' ) }} <br> @php($total_peso_ruta = $total_peso_ruta + ($det4->dias * $det4->total_personas * $det4->peso_racion)  ) 
-                                    <b>Peso de Raciones en Quintales:</b> {{ number_format( (($det4->dias * $det4->total_personas * $det4->peso_racion)/453.59237)/100, 2, '.', ',' ) }} <br> @php($total_peso_ruta_quintales = $total_peso_ruta_quintales + ((($det4->dias * $det4->total_personas * $det4->peso_racion)/453.59237)/100))
+                                    <b>Peso de Raciones en Libras:</b> {{ number_format( ($det4->dias * $det4->total_personas * $det4->peso_racion), 2, '.', ',' ) }} <br> @php($total_peso_ruta = $total_peso_ruta + ( ($det4->dias * $det4->total_personas * $det4->peso_racion)*453.59237)  ) 
+                                    <b>Peso de Raciones en Quintales:</b> {{ number_format( (($det4->dias * $det4->total_personas * $det4->peso_racion)/100), 2, '.', ',' ) }} <br> @php($total_peso_ruta_quintales = $total_peso_ruta_quintales + ((($det4->dias * $det4->total_personas * $det4->peso_racion)/100)))
                                     <b>Unidades de Racion:</b> {{ number_format( (($det4->dias * $det4->total_personas * $det4->peso_racion)/110), 2, '.', ',' ) }}
                                 </p> 
                             @endif
