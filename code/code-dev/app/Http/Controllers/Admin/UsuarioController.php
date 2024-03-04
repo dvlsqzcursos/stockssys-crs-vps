@@ -289,6 +289,60 @@ class UsuarioController extends Controller
         return $permisos;
     }
 
+    public function getCuentaUsuario(){
+        
+        $datos = [
+
+        ];
+
+        return view('admin.usuarios.cuenta.inicio',$datos);
+    }
+
+    public function postCambioPassword(Request $request){
+        $reglas = [
+            'apassword' => 'required|min:8',
+            'password' => 'required|min:8',
+            'cpassword' => 'required|min:8|same:password'
+
+        ];
+
+        $mensajes = [
+            'apassword.required' => 'Escriba su contraseña actual.',
+            'apassword.min' => 'La contraseña actual debe de tener al menos 8 caracteres',
+            'password.required' => 'Escriba su nueva contraseña.',
+            'password.min' => 'Su nueva contraseña debe de tener al menos 8 caracteres',
+            'cpassword.required' => 'Confirme su nueva contraseña .',
+            'cpassword.min' => 'La confirmación de la nueva contraseña debe de tener al menos 8 caracteres',
+            'cpassword.same' => 'Las contraseñas no coinciden'
+        ];
+
+        $validator = Validator::make($request->all(),$reglas,$mensajes);
+
+        if($validator->fails()):
+            return back()->withErrors($validator)->with('error', 'Se ha producido un error.')
+            ->withInput();
+        else:
+            $u = Usuario::find(Auth::id());
+
+            if(Hash::check($request->input('apassword'), $u->password)):
+                $u->password = Hash::make($request->input('password'));
+
+                if($u->save()):
+                    $b = new Bitacora;
+                    $b->accion = "Usuario ".$u->usuario." actualizo su contraseña";
+                    $b->id_usuario = Auth::id();
+                    $b->save();
+
+                    return back()->with('messages', 'La contraseña se actualizo con exito!.')
+                        ->with('typealert', 'success');
+                endif;
+            else:
+                return back()->with('messages', 'Su contraseña actual es errónea, verifiquela por favor.')
+                    ->with('typealert', 'danger');
+            endif;
+        endif;
+    }
+
 
 
     

@@ -85,7 +85,7 @@
 
     <div>
         <table style="text-align:center;">
-            <thead style="background-color: #96D4D4; border: 1px solid black; border-collapse: collapse;">
+            <thead style="background-color: #bfbfbf; border: 1px solid black; border-collapse: collapse;">
                 <tr>
                     <td>CODIGO</td>
                     <td>ESCUELA</td>
@@ -141,14 +141,14 @@
                                 @php($d++)
                             @endfor  
                             
-                            <td style="background-color: #96D4D4;">{{ number_format($total_quintales, 2, '.', ',' ) }}</td>
+                            <td style="background-color: #bfbfbf;">{{ number_format($total_quintales, 2, '.', ',' ) }}</td>
                             <td>{{$det->racion}} </td>
                             <td>{{$det->boleta}}</td>
                         </tr>
                     @endforeach
 
             </tbody>
-            <tfoot style="background-color: #96D4D4; border: 1px solid black; border-collapse: collapse;">
+            <tfoot style="background-color: #bfbfbf; border: 1px solid black; border-collapse: collapse;">
                 <tr>
                     <td colspan="2">Total de unidades a enviar</td>
                     <td>{{ $total_participantes }}</td>

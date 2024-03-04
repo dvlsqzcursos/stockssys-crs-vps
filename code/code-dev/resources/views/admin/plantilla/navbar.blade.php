@@ -94,7 +94,7 @@
             <i class="fa-solid fa-user"></i> {{ Auth::user()->usuario }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{url('/admin/ubicaciones')}}"><i class="fa-solid fa-user-gear"></i> Cuenta</a></li>
+            <li><a class="dropdown-item" href="{{url('/admin/cuenta_usuario')}}"><i class="fa-solid fa-user-gear"></i> Cuenta</a></li>
             <div class="dropdown-divider"></div>
             <li><a href="{{url('/cerrar_sesion')}}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
           </ul>

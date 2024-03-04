@@ -177,6 +177,10 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'UserStatus', 'Perm
     //Reporte de Bitacoras
     Route::get('/bitacoras', [BitacoraController::class, 'getInicio'])->name('bitacoras');
 
+    //Reporte de Bitacoras
+    Route::get('/cuenta_usuario', [UsuarioController::class, 'getCuentaUsuario'])->name('usuarios');
+    Route::post('/cambio_password_usuario', [UsuarioController::class, 'postCambioPassword'])->name('usuarios');
+
     //Modulo de Pruebas
     Route::get('/pruebas', [PruebasController::class, 'getInicio'])->name('ubicaciones');
     Route::post('/prueba/importar', [PruebasController::class, 'postArchivoImportar'])->name('escuela_registrar');
