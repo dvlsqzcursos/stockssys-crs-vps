@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->date('fecha');
             $table->integer('tipo_documento')->nullable();
-            $table->integer('no_documento')->nullable();
+            $table->string('no_documento')->nullable();
             $table->integer('tipo_bodega')->nullable();   
             $table->integer('id_socio_despacho')->nullable();     
             $table->integer('id_solicitud_despacho')->nullable(); 

@@ -18,4 +18,8 @@ class Bodega extends Model
         return $this->hasOne(Insumo::class,'id','id_insumo');
     }
 
+    public function pesos_alimento(){
+        return $this->hasMany(PesoInsumo::class,'id_insumo','id');
+    }
+
 }

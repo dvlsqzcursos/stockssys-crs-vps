@@ -31,6 +31,7 @@
 
         <div style="text-align: center; width: 33%; display: inline-block; float:left">
             <b>ID: </b> <br>
+            {{ $solicitud->id.'-'.\Carbon\Carbon::parse($solicitud->created_at)->format('Y')}}
         </div>
 
         <div style="text-align: left; width: 33%; display: inline-block; float:right;">
@@ -63,10 +64,10 @@
                     <td>PRODUCTO</td>
                     <td>TIPO</td>
                     <td>Gramos/Kgs</td>
-                    <td>Kilogramos</td>
                     <td>Unidades</td>
                     <td>Kilogramos</td>
                     <td>Unidades</td>
+                    <td>Kilogramos</td>
                     <td>Unidades</td>
                 </tr>
             </thead>
@@ -75,12 +76,18 @@
                 <tr>
                     <td>{{$det->alimento_bodega_socio->nombre}}</td>
                     <td>{{$det->racion->tipo_alimentos }}</td>
-                    <td></td>
+                    @foreach($det->racion->alimentos as $a)           
+                        @if($a->id_alimento == $det->id_insumo_bodega_socio)
+                            <td> {{ $a->cantidad }} </td> 
+                        @endif                                                            
+                    @endforeach  
+                    @foreach($det->alimento_bodega_socio->pesos_alimento as $p)                                                                               
+                        <td> {{ ceil($det->no_unidades/ $p->kg_x_unidad) }} </td> 
+                    @endforeach   
                     <td>{{$det->no_unidades}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$det->alimento_bodega_socio->saldo}}</td>
+                    <td>{{$det->alimento_bodega_socio->saldo}}</td>
+                    <td>{{ ceil( ($det->no_unidades/ $p->kg_x_unidad) - $det->alimento_bodega_socio->saldo ) }} </td>
                 </tr>
                 @endforeach                   
 

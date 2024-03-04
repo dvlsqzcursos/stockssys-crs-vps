@@ -125,8 +125,24 @@
                                         <tr>
                                             <td>{{ $det->alimento_bodega_socio->nombre}}</td>
                                             <td>{{ $det->pl}}</td>
-                                            <td></td>
-                                            <td></td>
+                                                @foreach($raciones as $r)
+                                                    @if($r->id == $d->tipo_racion)
+                                                        @foreach($r->alimentos as $a)
+                                                            @if($a->id_alimento == $det->id_insumo)
+                                                                <td>{{$a->cantidad}}</td>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
+                                            
+                                                @foreach($det->alimento_bodega_socio->pesos_alimento as $p) 
+                                                    @if(Illuminate\Support\Str::lower($det->alimento_bodega_socio->nombre) != "aceite")
+                                                        <td>{{ $det->no_unidades*$p->libras_x_unidad}} </td>
+                                                    @else
+                                                        <td>{{ $det->no_unidades*20}} </td>
+                                                    @endif
+                                                    
+                                                @endforeach 
                                             <td>{{ $det->no_unidades}}</td>
                                         </tr>
                                     @endforeach

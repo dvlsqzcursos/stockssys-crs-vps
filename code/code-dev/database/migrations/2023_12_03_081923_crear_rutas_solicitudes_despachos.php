@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('no_licencia')->nullable();
             $table->string('placa_vehiculo')->nullable();
             $table->string('tipo_vehiculo')->nullable();
+            $table->date('fecha_traslado')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

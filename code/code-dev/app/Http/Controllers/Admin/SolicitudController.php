@@ -309,10 +309,12 @@ class SolicitudController extends Controller
         
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id_solicitud_despacho', $id)->where('id_escuela_despacho', $idEscuela)->get();
         $escuelas_principales = Escuela::where('id_socio', Auth::user()->id_institucion)->get();
+        $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
         $idSolicitud = $id;
             
         $datos = [
             'despachos' => $despachos,
+            'raciones' => $raciones,
             'escuelas_principales' => $escuelas_principales,
             'idSolicitud' => $idSolicitud
         ];
@@ -324,8 +326,9 @@ class SolicitudController extends Controller
     public function getSolicitudEscuelaDespachoPDF($idSolicitud, $idEscuela, $id){     
         
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id', $id)->where('id_solicitud_despacho', $idSolicitud)->where('id_escuela_despacho', $idEscuela)->get();
-            
+        $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
         $datos = [
+            'raciones' => $raciones,
             'despachos' => $despachos 
         ];
 
@@ -807,6 +810,7 @@ class SolicitudController extends Controller
                 'e.nombre as escuela_nombre',
                 'be.id as egreso',
                 'be.participantes as participantes',
+                'be.no_documento as boleta',
                 'ra.id as idracion',
                 'ra.nombre as racion',
 
@@ -863,7 +867,7 @@ class SolicitudController extends Controller
 
 
 
-        $alimentos = Bodega::where('categoria' , 0)->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->orderBy('id', 'Asc')->get();
+        $alimentos = Bodega::with('pesos_alimento')->where('categoria' , 0)->where('tipo_bodega',1)->where('id_institucion', Auth::user()->id_institucion)->orderBy('id', 'Asc')->get();
         $solicitud = Solicitud::with(['entrega', 'usuario'])->where('id', $idSolicitud)->first();
         
         
