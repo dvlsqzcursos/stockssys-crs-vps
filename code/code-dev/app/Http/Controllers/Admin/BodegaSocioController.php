@@ -121,6 +121,7 @@ class BodegaSocioController extends Controller
 
                 $idinsumo=$request->get('idinsumo');
                 $pl=$request->get('pl');
+                $bubd=$request->get('bubd');
                 $no_unidades=$request->get('no_unidades');
                 $unidad_medida=$request->get('unidad_medida');
                 $peso_total=$request->get('peso_total');
@@ -131,6 +132,7 @@ class BodegaSocioController extends Controller
                     $detalle->id_ingreso = $bi->id;
                     $detalle->id_insumo = $idinsumo[$cont];
                     $detalle->pl = $pl[$cont];
+                    $detalle->bubd = $bubd[$cont];
                     $detalle->no_unidades = $no_unidades[$cont];
                     $detalle->unidad_medida = $unidad_medida[$cont];
                     $detalle->peso_total = $peso_total[$cont];

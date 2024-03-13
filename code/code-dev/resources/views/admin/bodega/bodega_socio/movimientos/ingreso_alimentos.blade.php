@@ -104,6 +104,14 @@
                             </div>
 
                             <div class="col-md-2">
+                                <label for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Best Used By/Before Date: </strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
+                                    {!! Form::date('bubd', null, ['class'=>'form-control', 'id' => 'bubd']) !!}
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
                                 <label for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> No. Unidades: </strong></label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
@@ -131,6 +139,7 @@
                                         <th>ELIMINAR</th>
                                         <th>INSUMO</th>
                                         <th>PL</th>
+                                        <th>BUBD</th>
                                         <th>NO UNIDADES</th>
                                         <th>UNIDAD DE MEDIDA (LIBRAS/CAJAS)</th>
                                         <th>PESO TOTAL (LIBRAS)</th>
@@ -178,12 +187,13 @@
         idinsumo=$("#idinsumo").val();
         insumo=$("#idinsumo option:selected").text();
         pl=$("#pl").val();
+        bubd=$("#bubd").val();
         no_unidades=$("#no_unidades").val();
         unidad_medida=$("#unidad_medida").val();
         peso_total = no_unidades * unidad_medida;
 
         if (idinsumo!=""  ){
-            var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-warning" onclick="eliminar('+cont+');">X</button></td><td><input type="hidden" name="idinsumo[]" value="'+idinsumo+'">'+insumo+'</td><td><input type="number" name="pl[]" value="'+pl+'"></td><td><input type="number" name="no_unidades[]" value="'+no_unidades+'"></td><td><input type="number" name="unidad_medida[]" value="'+unidad_medida+'"></td><td><input type="number" name="peso_total[]" value="'+peso_total+'"></td></tr>';
+            var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-warning" onclick="eliminar('+cont+');">X</button></td><td><input type="hidden" name="idinsumo[]" value="'+idinsumo+'">'+insumo+'</td><td><input type="number" name="pl[]" value="'+pl+'"></td><td><input type="text" name="bubd[]" value="'+bubd+'"><td><input type="number" name="no_unidades[]" value="'+no_unidades+'"></td><td><input type="number" name="unidad_medida[]" value="'+unidad_medida+'"></td><td><input type="number" name="peso_total[]" value="'+peso_total+'"></td></tr>';
             cont++;
             limpiar();
             evaluar();

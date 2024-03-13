@@ -64,7 +64,8 @@
             '1'=>'Boleta de Despacho',
             '2'=>'Factura',
             '3'=>'Recibo',
-            '4'=>'Otro',
+            '4'=>'Perdida/Descarte',
+            '5'=>'Otro',
         ];
 
         

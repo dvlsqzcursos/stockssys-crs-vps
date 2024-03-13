@@ -10,7 +10,22 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
+            <div class="card ">
+
+                <div class="card-header">
+                    <h2 class="title"><i class="fas fa-plus-circle"></i><strong> Generar Reporte</strong></h2>
+                </div>
+
+                <div class="card-body">
+                    <a href="{{ url('/admin/reporte/panel') }}" class="btn btn-secondary mtop16">Ir Panel</a>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div class="col-md-6">
             <div class="card ">
 
                 <div class="card-header">

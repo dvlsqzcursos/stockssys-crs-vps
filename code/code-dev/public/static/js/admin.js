@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_generar_usuario = document.getElementById('btn_generar_usuario');
     var btn_buscar_escuelas_despacho = document.getElementById('btn_buscar_escuelas_despacho');
     var btn_buscar_socios_solicitudes_despacho = document.getElementById('btn_buscar_socios_solicitudes_despacho');
-    var btn_historial_detalles = document.getElementById('btn_historial_detalles');
+    var btn_buscar_socio_solicitudes_despacho = document.getElementById('btn_buscar_socio_solicitudes_despacho');
 
     if(route == 'bodega_socio_egresos'){
         plsSociosInsumosDisponibles();
@@ -63,6 +63,15 @@ document.addEventListener('DOMContentLoaded', function(){
             obtenerSociosSolicitudes();
         });
     }
+
+    if(btn_buscar_socio_solicitudes_despacho){
+        btn_buscar_socio_solicitudes_despacho.addEventListener('click', function(e){
+            e.preventDefault();
+            obtenerSociosSolicitudesDespacho();
+        });
+    }
+
+    
 
     
     $('#tabla').DataTable({
@@ -489,7 +498,7 @@ function obtenerEscuelas(){
     
 }
 
-function obtenerSociosSolicitudes(){   
+function obtenerSociosSolicitudes(){
     var id_socio = document.getElementById('id_socio').value;    
     select = document.getElementById('id_solicitud');
     select.innerHTML = "";
@@ -506,6 +515,33 @@ function obtenerSociosSolicitudes(){
             if('solicitudes' in data){ 
                 for(i=0; i<data.solicitudes.length; i++){
                     select.innerHTML += "<option value=\""+data.solicitudes[i].id+"\" selected>"+"No."+data.solicitudes[i].id+"- Fecha: "+data.solicitudes[i].fecha+"</option>";
+                }
+
+            }
+
+            
+
+        }
+    }    
+}
+
+function obtenerSociosSolicitudesDespacho(){
+    var id_socio = document.getElementById('id_socio').value;    
+    select = document.getElementById('id_solicitud');
+    select.innerHTML = "";
+    //var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
+    var url = base + '/stocksys/api/solicitudes_despacho/socios/'+id_socio;
+    http.open('GET', url, true);
+    http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+    http.send();
+    http.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var data = this.responseText;
+            data = JSON.parse(data);        
+
+            if('solicitudes' in data){ 
+                for(i=0; i<data.solicitudes.length; i++){
+                    select.innerHTML += "<option value=\""+data.solicitudes[i].id+"\" selected>"+"No."+data.solicitudes[i].id+"</option>";
                 }
 
             }

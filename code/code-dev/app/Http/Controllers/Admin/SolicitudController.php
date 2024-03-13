@@ -52,34 +52,119 @@ class SolicitudController extends Controller
         $solicitud = Excel::toArray(new SolicitudDetallesImport, $archivo);
 
         foreach($solicitud[0] as $csd):
-            $escuela = Escuela::where('codigo', $csd['codigo_de_la_escuela'])->first();
-            $racion = Racion::where('tipo_alimentos', $csd['tipo_de_actividad_alimentos'])->where('id_institucion',  Auth::user()->id_institucion)->get()->first();
+            
 
-            $sd = new SolicitudDetalles;
-            $sd->id_solicitud = $idSolicitud;
-            $fecha= intval($csd['fecha_de_solicitud']);
-            $sd->fecha = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($fecha));
-            $sd->id_escuela = $escuela->id;
-            $sd->mes_de_solicitud = $csd['mes_de_solicitud'];
-            $sd->dias_de_solicitud = $csd['dias_de_solicitud']; 
-            $sd->ninas_pre_primaria_a_tercero_primaria = $csd['ninas_pre_primaria_a_tercero_primaria']; 
-            $sd->ninos_pre_primaria_a_tercero_primaria = $csd['ninos_pre_primaria_a_tercero_primaria'];
-            $sd->total_pre_primaria_a_tercero_primaria = $csd['total_pre_primaria_a_tercero_primaria'];
-            $sd->ninas_cuarto_a_sexto = $csd['ninas_cuarto_a_sexto'];
-            $sd->ninos_cuarto_a_sexto = $csd['ninios_cuarto_sexto'];
-            $sd->total_cuarto_a_sexto = $csd['total_cuarto_a_sexto'];
-            $sd->total_de_estudiantes = $csd['total_de_estudiantes'];
-            $sd->total_de_raciones_de_estudiantes = $csd['total_de_raciones_de_estudiantes']; 
-            $sd->total_docentes = $csd['total_docentes'];
-            $sd->total_voluntarios = $csd['total_voluntarios'];
-            $sd->total_de_docentes_y_voluntarios = $csd['total_de_docentes_y_voluntarios']; 
-            $sd->total_de_raciones_de_docentes_y_voluntarios = $csd['total_de_raciones_de_docentes_y_voluntarios'];
-            $sd->total_de_personas = $csd['total_de_personas'];
-            $sd->total_de_raciones = $csd['total_de_raciones'];
-            $sd->tipo_de_actividad_alimentos = $racion->id;
-            $sd->numero_de_entrega = $csd['numero_de_entrega'];
-            $sd->tipo = $csd['tipo'];
-            $sd->save();
+            $reglas = [
+                'fecha_de_solicitud' => 'required',
+                'codigo_de_la_escuela' => 'required|string',
+                'mes_de_solicitud' => 'required|string',
+                'dias_de_solicitud' => 'required|integer',
+                'ninas_pre_primaria_a_tercero_primaria' => 'required|integer',
+                'ninos_pre_primaria_a_tercero_primaria' => 'required|integer',
+                'total_pre_primaria_a_tercero_primaria' => 'required|integer',
+                'ninas_cuarto_a_sexto' => 'required|integer',
+                'ninios_cuarto_sexto' => 'required|integer',
+                'total_cuarto_a_sexto' => 'required|integer',
+                'total_de_estudiantes' => 'required|integer',
+                'total_de_raciones_de_estudiantes' => 'required|integer',
+                'total_docentes' => 'required|integer',
+                'total_voluntarios' => 'required|integer',
+                'total_de_docentes_y_voluntarios' => 'required|integer',
+                'total_de_raciones_de_docentes_y_voluntarios' => 'required|integer',
+                'total_de_personas' => 'required|integer',
+                'total_de_raciones' => 'required|integer',
+                'tipo_de_actividad_alimentos' => 'required|string',
+                'numero_de_entrega' => 'required|integer',
+                'tipo' => 'required|string',
+            ];
+            $mensajes = [
+                'fecha_de_solicitud.required' => 'Se requiere una fecha de solicitud para la escuela.',              
+                'codigo_de_la_escuela.required' => 'Se requiere un codigo para la escuela.',
+                'codigo_de_la_escuela.string' => 'El codigo debe ser un dato numerico incluyendo los guiones.',
+                'mes_de_solicitud.required' => 'Se requiere un mes de solicitud para la escuela.',
+                'mes_de_solicitud.string' => 'El mes debe ser un dato texto.',
+                'dias_de_solicitud.required' => 'Se requiere los dias a cubrir en la solicitud para la escuela.',
+                'dias_de_solicitud.integer' => 'El dia debe ser un dato numerico.',
+                'ninas_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niñas de pre primaria a tercero primaria para la escuela.',
+                'ninas_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niñas de pre primaria a tercero primaria debe ser un dato numerico.',
+                'ninos_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niños de pre primaria a tercero primaria para la escuela.',
+                'ninos_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niños de pre primaria a tercero primaria debe ser un dato numerico.',
+                'total_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad total de estudiantes de pre primaria a tercero primaria para la escuela.',
+                'total_pre_primaria_a_tercero_primaria.integer' => 'La cantidad total de estudiantes de pre primaria a tercero primaria debe ser un dato numerico.',
+                'ninas_cuarto_a_sexto.required' => 'Se requiere la cantidad de niñas de cuarto a sexto primaria para la escuela.',
+                'ninas_cuarto_a_sexto.integer' => 'La cantidad de niñas de cuarto a sexto primaria debe ser un dato numerico.',
+                'ninios_cuarto_sexto.required' => 'Se requiere la cantidad de niños de cuarto a sexto primaria para la escuela.',
+                'ninios_cuarto_sexto.integer' => 'La cantidad de niños de cuarto a sexto primaria debe ser un dato numerico.',
+                'total_cuarto_a_sexto.required' => 'Se requiere la cantidad total de estudiantes de cuarto a sexto primaria para la escuela.',
+                'total_cuarto_a_sexto.integer' => 'La cantidad total de estudiantes de cuarto a sexto primaria debe ser un dato numerico.',
+                'total_de_estudiantes.required' => 'Se requiere la cantidad total de estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+                'total_de_estudiantes.integer' => 'La cantidad total de estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+                'total_de_raciones_de_estudiantes.required' => 'Se requiere la cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+                'total_de_raciones_de_estudiantes.integer' => 'La cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+                'total_docentes.required' => 'Se requiere la cantidad total de docentes de la escuela.',
+                'total_docentes.integer' => 'La cantidad total de docentes debe ser un dato numerico.',
+                'total_voluntarios.required' => 'Se requiere la cantidad total de voluntarios de la escuela.',
+                'total_voluntarios.integer' => 'La cantidad total de voluntarios debe ser un dato numerico.',
+                'total_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de docentes y voluntarios de la escuela.',
+                'total_de_docentes_y_voluntarios.integer' => 'La cantidad total de docentes y voluntarios debe ser un dato numerico.',
+                'total_de_raciones_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de raciones de docentes y voluntarios de la escuela.',
+                'total_de_raciones_de_docentes_y_voluntarios.integer' => 'La cantidad total de raciones de docentes y voluntarios debe ser un dato numerico.',
+                'total_de_personas.required' => 'Se requiere la cantidad total de personas de la escuela.',
+                'total_de_personas.integer' => 'La cantidad total de personas debe ser un dato numerico.',
+                'total_de_raciones.required' => 'Se requiere la cantidad total de raciones de la escuela.',
+                'total_de_raciones.integer' => 'La cantidad total de raciones debe ser un dato numerico.',
+                'tipo_de_actividad_alimentos.required' => 'Se requiere el tipo de actividad de alimentos de la racion asignada a la escuela.',
+                'tipo_de_actividad_alimentos.string' => 'El tipo de actividad de alimentos de la racion asignada debe ser en relacion al tipo de actividad de la racion previamente registrada.',
+                'numero_de_entrega.required' => 'Se requiere el numero de entrega de la escuela.',
+                'numero_de_entrega.integer' => 'El numero de entrega debe ser un dato numerico.',
+                'tipo.required' => 'Se requiere el tipo de entrega de la escuela.',
+                'tipo.integer' => 'El tipo de entrega debe ser un dato de texto, numerico o alfanumerico.'
+            ];
+    
+            $validator = Validator::make($csd, $reglas, $mensajes);
+
+            if ($validator->fails()) :
+                $s = Solicitud::findOrFail($idSolicitud);
+                $s->observaciones = "Solicitud eliminada por mal ingreso de datos o formato de los mismos, en el archivo excel";
+                $s->nombre_archivo = $archivo->getClientOriginalName();
+                $s->save();
+                $s = Solicitud::findOrFail($idSolicitud);
+                $s->delete();
+                return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
+                
+
+            else:
+                
+
+                $escuela = Escuela::where('codigo', $csd['codigo_de_la_escuela'])->first();
+                $racion = Racion::where('tipo_alimentos', $csd['tipo_de_actividad_alimentos'])->where('id_institucion',  Auth::user()->id_institucion)->get()->first();
+
+                $sd = new SolicitudDetalles;
+                $sd->id_solicitud = $idSolicitud;
+                $fecha= intval($csd['fecha_de_solicitud']);
+                $sd->fecha = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($fecha));
+                $sd->id_escuela = $escuela->id;
+                $sd->mes_de_solicitud = $csd['mes_de_solicitud'];
+                $sd->dias_de_solicitud = $csd['dias_de_solicitud']; 
+                $sd->ninas_pre_primaria_a_tercero_primaria = $csd['ninas_pre_primaria_a_tercero_primaria']; 
+                $sd->ninos_pre_primaria_a_tercero_primaria = $csd['ninos_pre_primaria_a_tercero_primaria'];
+                $sd->total_pre_primaria_a_tercero_primaria = $csd['total_pre_primaria_a_tercero_primaria'];
+                $sd->ninas_cuarto_a_sexto = $csd['ninas_cuarto_a_sexto'];
+                $sd->ninos_cuarto_a_sexto = $csd['ninios_cuarto_sexto'];
+                $sd->total_cuarto_a_sexto = $csd['total_cuarto_a_sexto'];
+                $sd->total_de_estudiantes = $csd['total_de_estudiantes'];
+                $sd->total_de_raciones_de_estudiantes = $csd['total_de_raciones_de_estudiantes']; 
+                $sd->total_docentes = $csd['total_docentes'];
+                $sd->total_voluntarios = $csd['total_voluntarios'];
+                $sd->total_de_docentes_y_voluntarios = $csd['total_de_docentes_y_voluntarios']; 
+                $sd->total_de_raciones_de_docentes_y_voluntarios = $csd['total_de_raciones_de_docentes_y_voluntarios'];
+                $sd->total_de_personas = $csd['total_de_personas'];
+                $sd->total_de_raciones = $csd['total_de_raciones'];
+                $sd->tipo_de_actividad_alimentos = $racion->id;
+                $sd->numero_de_entrega = $csd['numero_de_entrega'];
+                $sd->tipo = $csd['tipo'];
+                $sd->save();
+            endif;
         endforeach;
 
         Solicitud::where('id',$idSolicitud)->update(['nombre_archivo'=>$archivo->getClientOriginalName()]);
@@ -137,11 +222,71 @@ class SolicitudController extends Controller
 
     public function postSolicitudDetallesRegistrar(Request $request){
         $reglas = [
-            
-    	];
-    	$mensajes = [
-            
-    	];
+            'fecha' => 'required',
+            'codigo_de_la_escuela' => 'required|string',
+            'mes_de_solicitud' => 'required|string',
+            'dias_de_solicitud' => 'required|integer',
+            'ninas_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'ninos_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'total_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'ninas_cuarto_a_sexto' => 'required|integer',
+            'ninos_cuarto_sexto' => 'required|integer',
+            'total_cuarto_a_sexto' => 'required|integer',
+            'total_de_estudiantes' => 'required|integer',
+            'total_de_raciones_de_estudiantes' => 'required|integer',
+            'total_docentes' => 'required|integer',
+            'total_voluntarios' => 'required|integer',
+            'total_de_docentes_y_voluntarios' => 'required|integer',
+            'total_de_raciones_de_docentes_y_voluntarios' => 'required|integer',
+            'total_de_personas' => 'required|integer',
+            'total_de_raciones' => 'required|integer',
+            'tipo_de_actividad_alimentos' => 'required|string',
+            'numero_de_entrega' => 'required|integer',
+            'tipo' => 'required|string',
+        ];
+        $mensajes = [
+            'fecha.required' => 'Se requiere una fecha de solicitud para la escuela.',              
+            'codigo_de_la_escuela.required' => 'Se requiere un codigo para la escuela.',
+            'codigo_de_la_escuela.string' => 'El codigo debe ser un dato numerico incluyendo los guiones.',
+            'mes_de_solicitud.required' => 'Se requiere un mes de solicitud para la escuela.',
+            'mes_de_solicitud.string' => 'El mes debe ser un dato texto.',
+            'dias_de_solicitud.required' => 'Se requiere los dias a cubrir en la solicitud para la escuela.',
+            'dias_de_solicitud.integer' => 'El dia debe ser un dato numerico.',
+            'ninas_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niñas de pre primaria a tercero primaria para la escuela.',
+            'ninas_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niñas de pre primaria a tercero primaria debe ser un dato numerico.',
+            'ninos_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niños de pre primaria a tercero primaria para la escuela.',
+            'ninos_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niños de pre primaria a tercero primaria debe ser un dato numerico.',
+            'total_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad total de estudiantes de pre primaria a tercero primaria para la escuela.',
+            'total_pre_primaria_a_tercero_primaria.integer' => 'La cantidad total de estudiantes de pre primaria a tercero primaria debe ser un dato numerico.',
+            'ninas_cuarto_a_sexto.required' => 'Se requiere la cantidad de niñas de cuarto a sexto primaria para la escuela.',
+            'ninas_cuarto_a_sexto.integer' => 'La cantidad de niñas de cuarto a sexto primaria debe ser un dato numerico.',
+            'ninos_cuarto_sexto.required' => 'Se requiere la cantidad de niños de cuarto a sexto primaria para la escuela.',
+            'ninos_cuarto_sexto.integer' => 'La cantidad de niños de cuarto a sexto primaria debe ser un dato numerico.',
+            'total_cuarto_a_sexto.required' => 'Se requiere la cantidad total de estudiantes de cuarto a sexto primaria para la escuela.',
+            'total_cuarto_a_sexto.integer' => 'La cantidad total de estudiantes de cuarto a sexto primaria debe ser un dato numerico.',
+            'total_de_estudiantes.required' => 'Se requiere la cantidad total de estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+            'total_de_estudiantes.integer' => 'La cantidad total de estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+            'total_de_raciones_de_estudiantes.required' => 'Se requiere la cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+            'total_de_raciones_de_estudiantes.integer' => 'La cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+            'total_docentes.required' => 'Se requiere la cantidad total de docentes de la escuela.',
+            'total_docentes.integer' => 'La cantidad total de docentes debe ser un dato numerico.',
+            'total_voluntarios.required' => 'Se requiere la cantidad total de voluntarios de la escuela.',
+            'total_voluntarios.integer' => 'La cantidad total de voluntarios debe ser un dato numerico.',
+            'total_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de docentes y voluntarios de la escuela.',
+            'total_de_docentes_y_voluntarios.integer' => 'La cantidad total de docentes y voluntarios debe ser un dato numerico.',
+            'total_de_raciones_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de raciones de docentes y voluntarios de la escuela.',
+            'total_de_raciones_de_docentes_y_voluntarios.integer' => 'La cantidad total de raciones de docentes y voluntarios debe ser un dato numerico.',
+            'total_de_personas.required' => 'Se requiere la cantidad total de personas de la escuela.',
+            'total_de_personas.integer' => 'La cantidad total de personas debe ser un dato numerico.',
+            'total_de_raciones.required' => 'Se requiere la cantidad total de raciones de la escuela.',
+            'total_de_raciones.integer' => 'La cantidad total de raciones debe ser un dato numerico.',
+            'tipo_de_actividad_alimentos.required' => 'Se requiere el tipo de actividad de alimentos de la racion asignada a la escuela.',
+            'tipo_de_actividad_alimentos.string' => 'El tipo de actividad de alimentos de la racion asignada debe ser en relacion al tipo de actividad de la racion previamente registrada.',
+            'numero_de_entrega.required' => 'Se requiere el numero de entrega de la escuela.',
+            'numero_de_entrega.integer' => 'El numero de entrega debe ser un dato numerico.',
+            'tipo.required' => 'Se requiere el tipo de entrega de la escuela.',
+            'tipo.integer' => 'El tipo de entrega debe ser un dato de texto, numerico o alfanumerico.'
+        ];
 
         $validator = Validator::make($request->all(), $reglas, $mensajes);
     	if($validator->fails()):
@@ -203,11 +348,71 @@ class SolicitudController extends Controller
 
     public function postSolicitudDetallesEditar(Request $request, $id){
         $reglas = [
-            
-    	];
-    	$mensajes = [
-            
-    	];
+            'fecha' => 'required',
+            'codigo_de_la_escuela' => 'required|string',
+            'mes_de_solicitud' => 'required|string',
+            'dias_de_solicitud' => 'required|integer',
+            'ninas_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'ninos_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'total_pre_primaria_a_tercero_primaria' => 'required|integer',
+            'ninas_cuarto_a_sexto' => 'required|integer',
+            'ninos_cuarto_sexto' => 'required|integer',
+            'total_cuarto_a_sexto' => 'required|integer',
+            'total_de_estudiantes' => 'required|integer',
+            'total_de_raciones_de_estudiantes' => 'required|integer',
+            'total_docentes' => 'required|integer',
+            'total_voluntarios' => 'required|integer',
+            'total_de_docentes_y_voluntarios' => 'required|integer',
+            'total_de_raciones_de_docentes_y_voluntarios' => 'required|integer',
+            'total_de_personas' => 'required|integer',
+            'total_de_raciones' => 'required|integer',
+            'tipo_de_actividad_alimentos' => 'required|string',
+            'numero_de_entrega' => 'required|integer',
+            'tipo' => 'required|string',
+        ];
+        $mensajes = [
+            'fecha.required' => 'Se requiere una fecha de solicitud para la escuela.',              
+            'codigo_de_la_escuela.required' => 'Se requiere un codigo para la escuela.',
+            'codigo_de_la_escuela.string' => 'El codigo debe ser un dato numerico incluyendo los guiones.',
+            'mes_de_solicitud.required' => 'Se requiere un mes de solicitud para la escuela.',
+            'mes_de_solicitud.string' => 'El mes debe ser un dato texto.',
+            'dias_de_solicitud.required' => 'Se requiere los dias a cubrir en la solicitud para la escuela.',
+            'dias_de_solicitud.integer' => 'El dia debe ser un dato numerico.',
+            'ninas_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niñas de pre primaria a tercero primaria para la escuela.',
+            'ninas_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niñas de pre primaria a tercero primaria debe ser un dato numerico.',
+            'ninos_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad de niños de pre primaria a tercero primaria para la escuela.',
+            'ninos_pre_primaria_a_tercero_primaria.integer' => 'La cantidad de niños de pre primaria a tercero primaria debe ser un dato numerico.',
+            'total_pre_primaria_a_tercero_primaria.required' => 'Se requiere la cantidad total de estudiantes de pre primaria a tercero primaria para la escuela.',
+            'total_pre_primaria_a_tercero_primaria.integer' => 'La cantidad total de estudiantes de pre primaria a tercero primaria debe ser un dato numerico.',
+            'ninas_cuarto_a_sexto.required' => 'Se requiere la cantidad de niñas de cuarto a sexto primaria para la escuela.',
+            'ninas_cuarto_a_sexto.integer' => 'La cantidad de niñas de cuarto a sexto primaria debe ser un dato numerico.',
+            'ninos_cuarto_sexto.required' => 'Se requiere la cantidad de niños de cuarto a sexto primaria para la escuela.',
+            'ninos_cuarto_sexto.integer' => 'La cantidad de niños de cuarto a sexto primaria debe ser un dato numerico.',
+            'total_cuarto_a_sexto.required' => 'Se requiere la cantidad total de estudiantes de cuarto a sexto primaria para la escuela.',
+            'total_cuarto_a_sexto.integer' => 'La cantidad total de estudiantes de cuarto a sexto primaria debe ser un dato numerico.',
+            'total_de_estudiantes.required' => 'Se requiere la cantidad total de estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+            'total_de_estudiantes.integer' => 'La cantidad total de estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+            'total_de_raciones_de_estudiantes.required' => 'Se requiere la cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) de la escuela.',
+            'total_de_raciones_de_estudiantes.integer' => 'La cantidad total de raciones estudiantes (desde pre primaria hasta sexto primaria) debe ser un dato numerico.',
+            'total_docentes.required' => 'Se requiere la cantidad total de docentes de la escuela.',
+            'total_docentes.integer' => 'La cantidad total de docentes debe ser un dato numerico.',
+            'total_voluntarios.required' => 'Se requiere la cantidad total de voluntarios de la escuela.',
+            'total_voluntarios.integer' => 'La cantidad total de voluntarios debe ser un dato numerico.',
+            'total_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de docentes y voluntarios de la escuela.',
+            'total_de_docentes_y_voluntarios.integer' => 'La cantidad total de docentes y voluntarios debe ser un dato numerico.',
+            'total_de_raciones_de_docentes_y_voluntarios.required' => 'Se requiere la cantidad total de raciones de docentes y voluntarios de la escuela.',
+            'total_de_raciones_de_docentes_y_voluntarios.integer' => 'La cantidad total de raciones de docentes y voluntarios debe ser un dato numerico.',
+            'total_de_personas.required' => 'Se requiere la cantidad total de personas de la escuela.',
+            'total_de_personas.integer' => 'La cantidad total de personas debe ser un dato numerico.',
+            'total_de_raciones.required' => 'Se requiere la cantidad total de raciones de la escuela.',
+            'total_de_raciones.integer' => 'La cantidad total de raciones debe ser un dato numerico.',
+            'tipo_de_actividad_alimentos.required' => 'Se requiere el tipo de actividad de alimentos de la racion asignada a la escuela.',
+            'tipo_de_actividad_alimentos.string' => 'El tipo de actividad de alimentos de la racion asignada debe ser en relacion al tipo de actividad de la racion previamente registrada.',
+            'numero_de_entrega.required' => 'Se requiere el numero de entrega de la escuela.',
+            'numero_de_entrega.integer' => 'El numero de entrega debe ser un dato numerico.',
+            'tipo.required' => 'Se requiere el tipo de entrega de la escuela.',
+            'tipo.integer' => 'El tipo de entrega debe ser un dato de texto, numerico o alfanumerico.'
+        ];
 
         $validator = Validator::make($request->all(), $reglas, $mensajes);
     	if($validator->fails()):
@@ -310,11 +515,13 @@ class SolicitudController extends Controller
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id_solicitud_despacho', $id)->where('id_escuela_despacho', $idEscuela)->get();
         $escuelas_principales = Escuela::where('id_socio', Auth::user()->id_institucion)->get();
         $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
+        $kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
         $idSolicitud = $id;
             
         $datos = [
             'despachos' => $despachos,
             'raciones' => $raciones,
+            'kits' => $kits,
             'escuelas_principales' => $escuelas_principales,
             'idSolicitud' => $idSolicitud
         ];
@@ -327,8 +534,10 @@ class SolicitudController extends Controller
         
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id', $id)->where('id_solicitud_despacho', $idSolicitud)->where('id_escuela_despacho', $idEscuela)->get();
         $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
+        $kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
         $datos = [
             'raciones' => $raciones,
+            'kits' => $kits,
             'despachos' => $despachos 
         ];
 
@@ -338,21 +547,6 @@ class SolicitudController extends Controller
         $pdf = Pdf::loadView('admin.solicitudes.boletas_despacho.pdf', $datos);
      
         return $pdf->stream();
-        
-        /*$filename = 'boleta despacho.pdf';
-    	$view = \View::make('admin.solicitudes.boletas_despacho.pdf', $datos);
-        $html = $view->render();
-        $ancho = 612; //8 1/2 
-        $largo = 396; //5 1/2 
-    	$pageLayout = array($ancho, $largo); //  or array($height, $width) 
-        $pdf = new TCPDF('l', 'pt', $pageLayout, true, 'UTF-8', false);
-        $pdf::SetTitle($filename);
-        $pdf::AddPage();
-        $pdf::writeHTML($html, true, false, true, false, '');
-
-        $pdf::Output(public_path($filename), 'F');
-
-        return response()->download(public_path($filename));*/
           
     }
 
@@ -722,6 +916,7 @@ class SolicitudController extends Controller
         $idSolicitud = $id;
         $rutas = RutaSolicitud::with('ruta_base')->where('id_solicitud_despacho',$id)->get();
         $raciones = Racion::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
+        $kits = Kit::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
 
         
         $detalle_escuelas = DB::table('solicitud_detalles')

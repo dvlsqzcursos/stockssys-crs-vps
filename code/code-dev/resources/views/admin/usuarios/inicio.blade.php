@@ -32,6 +32,7 @@
                                 <td><strong> NOMBRE </strong></td>
                                 <td><strong> USUARIO </strong></td>
                                 <td><strong> ROL </strong></td>
+                            </tr>   
                         </thead>
                         <tbody>
                             @foreach($usuarios as $u)

@@ -33,7 +33,12 @@
             <div class="card ">
 
                 <div class="card-header">
-                    <h2 class="title"><i class="fa-solid fa-bowl-rice"></i> <strong> Listados de Insumos Que Conforman El Kit: </strong> {{ $kit->nombre }}</h2>
+                    <h2 class="card-title"><i class="fa-solid fa-bowl-rice"></i> <strong> Listados de Insumos Que Conforman El Kit: </strong> {{ $kit->nombre }}</h2>
+                    <ul>                                             
+                        <li>
+                            <a href="{{ url('/admin/bodega_socio/kits/1') }}" ><i class="fa-solid fa-circle-arrow-left"></i> Regresar</a>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="card-body">

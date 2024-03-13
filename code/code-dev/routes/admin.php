@@ -173,6 +173,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'UserStatus', 'Perm
     //Modulo de Reportes
     Route::get('/reportes', [ReporteController::class, 'getInicio'])->name('reportes');
     Route::post('/reporte/informe_mensual', [ReporteController::class, 'postInformeMensualExport'])->name('reportes');
+    Route::get('/reporte/panel', [ReporteController::class, 'getPanelReporte'])->name('reportes');
+    Route::post('/reporte/panel/generar', [ReporteController::class, 'postPanelReporteGenerar'])->name('reportes');
+    Route::get('/reporte/exportar/pdf/{idSolicitud}/{idSocio}/{numReporte}', [ReporteController::class, 'getReporteGenerarPDF'])->name('reportes');
 
     //Reporte de Bitacoras
     Route::get('/bitacoras', [BitacoraController::class, 'getInicio'])->name('bitacoras');
@@ -198,3 +201,4 @@ Route::get('/stocksys/api/bodega_socio/solicitud_id/{id_solicitud}/escuela/{id_e
 Route::get('/stocksys/api/solicitudes/socios/{idSocio}',[BodegaPrincipalController::class, 'getSociosSolicitudes']);  
 Route::get('/stocksys/api/bodega_principal/insumo/pl_disponibles/{idAlimento}',[BodegaPrincipalController::class, 'getPlDisponiblesInsumo']); 
 Route::get('/stocksys/api/bodega_principal/insumo/pl/saldo_disponible/{pl}',[BodegaPrincipalController::class, 'getPlSaldoDisponibleInsumo']);  
+Route::get('/stocksys/api/solicitudes_despacho/socios/{idSocio}',[ReporteController::class, 'getSociosSolicitudes']); 
