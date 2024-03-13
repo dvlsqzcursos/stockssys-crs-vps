@@ -54,7 +54,9 @@
                                 <tr>
                                     <td width="240px">
                                         <div class="opts">
-                                            <a href="#" data-action="eliminar" data-path="admin/bodega_socio/racion/alimentos" data-object="{{ $ar->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
+                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_racion_alimentos'))
+                                                <a href="#" data-action="eliminar" data-path="admin/bodega_socio/racion/alimentos" data-object="{{ $ar->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
+                                            @endif
                                         </div>
                                     </td>
                                     <td>

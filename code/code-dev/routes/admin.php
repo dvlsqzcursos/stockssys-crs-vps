@@ -107,7 +107,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'UserStatus', 'Perm
     Route::get('/bodega_socio/racion/{id}/eliminar', [RacionController::class, 'getRacionEliminar'])->name('bodega_socio_racion_eliminar');
     Route::get('/bodega_socio/racion/{id}/alimentos', [RacionController::class, 'getRacionAlimentos'])->name('bodega_socio_racion_alimentos');
     Route::post('/bodega_socio/racion/alimentos/asignar', [RacionController::class, 'postRacionAlimentos'])->name('bodega_socio_racion_alimentos');
-    Route::get('/bodega_socio/racion/alimentos/{id}/eliminar', [RacionController::class, 'getRacionAlimentosEliminar'])->name('bodega_socio_racion_alimentos_eliminar');  
+    Route::get('/bodega_socio/racion/alimentos/{id}/eliminar', [RacionController::class, 'getRacionAlimentosEliminar'])->name('bodega_socio_racion_alimentos');  
     //Kits bodega de socios 
     Route::get('/bodega_socio/kits/{bodega}', [KitController::class, 'getInicio'])->name('bodega_socio_kits');
     Route::post('/bodega_socio/kit/registrar', [KitController::class, 'postKitRegistrar'])->name('bodega_socio_kit_registrar');    
