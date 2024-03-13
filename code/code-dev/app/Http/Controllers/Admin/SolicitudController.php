@@ -515,13 +515,13 @@ class SolicitudController extends Controller
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id_solicitud_despacho', $id)->where('id_escuela_despacho', $idEscuela)->get();
         $escuelas_principales = Escuela::where('id_socio', Auth::user()->id_institucion)->get();
         $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
-        $kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
+        //$kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
         $idSolicitud = $id;
             
         $datos = [
             'despachos' => $despachos,
             'raciones' => $raciones,
-            'kits' => $kits,
+            //'kits' => $kits,
             'escuelas_principales' => $escuelas_principales,
             'idSolicitud' => $idSolicitud
         ];
@@ -534,10 +534,10 @@ class SolicitudController extends Controller
         
         $despachos = BodegaEgreso::with(['detalles', 'escuela'])->where('id', $id)->where('id_solicitud_despacho', $idSolicitud)->where('id_escuela_despacho', $idEscuela)->get();
         $raciones = Racion::where('id_institucion', Auth::user()->id_institucion)->get();
-        $kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
+        //$kits = Kit::where('id_institucion', Auth::user()->id_institucion)->get();
         $datos = [
             'raciones' => $raciones,
-            'kits' => $kits,
+            //'kits' => $kits,
             'despachos' => $despachos 
         ];
 
@@ -916,7 +916,7 @@ class SolicitudController extends Controller
         $idSolicitud = $id;
         $rutas = RutaSolicitud::with('ruta_base')->where('id_solicitud_despacho',$id)->get();
         $raciones = Racion::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
-        $kits = Kit::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
+        //$kits = Kit::select('id')->where('id_institucion', Auth::user()->id_institucion)->get();
 
         
         $detalle_escuelas = DB::table('solicitud_detalles')
