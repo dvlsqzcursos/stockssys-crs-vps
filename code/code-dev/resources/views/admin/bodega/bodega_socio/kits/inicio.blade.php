@@ -20,7 +20,7 @@
                     {!! Form::open(['url' => '/admin/bodega_socio/kit/registrar', 'files' => true]) !!}
                         @include('admin.bodega.bodega_socio.kits.formulario')
 
-                        @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_registrar'))
+                        @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_registrar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
                         @endif
                     {!! Form::close() !!}
@@ -55,13 +55,13 @@
                                 <tr>
                                     <td width="240px">
                                         <div class="opts">
-                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_editar'))
+                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_editar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="{{ url('/admin/bodega_socio/kit/'.$k->id.'/editar') }}"  title="Editar"><i class="fas fa-edit"></i></a>
                                             @endif
                                             @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_insumos'))
                                                 <a href="{{ url('/admin/bodega_socio/kit/'.$k->id.'/insumos') }}"  title="Insumos"><i class="fa-solid fa-boxes-stacked"></i></a>
                                             @endif
-                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_eliminar'))
+                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_kit_eliminar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="#" data-action="eliminar" data-path="admin/bodega_socio/kit" data-object="{{ $k->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
                                             @endif
                                         </div>

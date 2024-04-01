@@ -19,7 +19,12 @@ use Elibyy\TCPDF\Facades\TCPDF;
 class SolicitudController extends Controller
 {
     public function getInicio(){
-        $solicitudes = Solicitud::with(['entrega', 'usuario'])->where('id_socio',  Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $solicitudes = Solicitud::with(['entrega', 'usuario'])->get();
+        else:
+            $solicitudes = Solicitud::with(['entrega', 'usuario'])->where('id_socio',  Auth::user()->id_institucion)->get();
+        endif;
+        
 
         $datos = [
             'solicitudes' => $solicitudes
@@ -657,7 +662,7 @@ class SolicitudController extends Controller
                 ->groupBy('escuelas.id', 'solicitud_detalles.tipo_de_actividad_alimentos', 'alimentos_racion.peso')
                 ->get();
 
-                    //return $det_escuelas_preprimaria;
+            //return $det_escuelas_preprimaria;
 
             if(isset($id_escolar2_racion) ):
                 //return $id_escolar2_racion;

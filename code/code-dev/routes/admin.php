@@ -175,7 +175,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'UserStatus', 'Perm
     Route::post('/reporte/informe_mensual', [ReporteController::class, 'postInformeMensualExport'])->name('reportes');
     Route::get('/reporte/panel', [ReporteController::class, 'getPanelReporte'])->name('reportes');
     Route::post('/reporte/panel/generar', [ReporteController::class, 'postPanelReporteGenerar'])->name('reportes');
-    Route::get('/reporte/exportar/pdf/{idSolicitud}/{idSocio}/{numReporte}', [ReporteController::class, 'getReporteGenerarPDF'])->name('reportes');
+    Route::get('/reporte/exportar/pdf/formato1/{idSolicitud}/{idSocio}/{numReporte}', [ReporteController::class, 'getReporteGenerarPDFFormato1'])->name('reportes');
+    Route::get('/reporte/exportar/pdf/formato2/{idSolicitud}/{idSocio}/{numReporte}', [ReporteController::class, 'getReporteGenerarPDFFormato2'])->name('reportes');
+    Route::get('/reporte/exportar/excel/{idSolicitud}/{idSocio}/{numReporte}', [ReporteController::class, 'getReporteGenerarExcel'])->name('reportes');
 
     //Reporte de Bitacoras
     Route::get('/bitacoras', [BitacoraController::class, 'getInicio'])->name('bitacoras');

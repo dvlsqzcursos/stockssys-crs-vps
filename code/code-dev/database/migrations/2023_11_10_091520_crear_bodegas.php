@@ -23,6 +23,30 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas ON');
+        DB::table('bodegas')->insert(array(
+            'id'=>'1',
+            'nombre'=>'Maiz USDA',
+            'id_unidad_medida'=>1,
+            'categoria'=>0,
+            'saldo'=>0,
+            'observaciones'=>null,
+            'tipo_bodega'=>1,
+            'id_institucion'=>2,
+        ));
+
+        DB::table('bodegas')->insert(array(
+            'id'=>'2',
+            'nombre'=>'Maiz BIO',
+            'id_unidad_medida'=>1,
+            'categoria'=>0,
+            'saldo'=>0,
+            'observaciones'=>null,
+            'tipo_bodega'=>1,
+            'id_institucion'=>2,    
+        ));
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas OFF');
     }
 
     /**

@@ -12,6 +12,15 @@ class Bodega extends Model
     use SoftDeletes;
 
     protected $table = 'bodegas';
+    protected $fillable = [
+        'nombre',
+        'id_unidad_medida',
+        'categoria',
+        'saldo',
+        'observaciones',
+        'tipo_bodega',
+        'id_institucion',   
+    ];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function insumo(){

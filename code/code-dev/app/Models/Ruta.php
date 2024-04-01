@@ -12,6 +12,7 @@ class Ruta extends Model
     use SoftDeletes;
 
     protected $table = 'rutas';
+    protected $fillable = ['correlativo','id_ubicacion','observaciones','estado','id_socio'];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function ubicacion(){

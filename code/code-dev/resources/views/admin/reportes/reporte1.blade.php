@@ -18,8 +18,8 @@
                 </div>
 
                 <div class="card-body">
-                    <a href="{{ url('/admin/reporte/exportar/pdf/'.$idSolicitud.'/'.$idSocio.'/'.$numReporte) }}" class="btn btn-outline-danger col-12"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-                    <a href="{{ url('/admin/bodega_socio/insumos') }}" class="btn btn-outline-success col-12 mtop16"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    <a href="{{ url('/admin/reporte/exportar/pdf/formato1/'.$idSolicitud.'/'.$idSocio.'/'.$numReporte) }}" target="_blank" class="btn btn-outline-danger col-12"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                    <a href="{{ url('/admin/reporte/exportar/excel/'.$idSolicitud.'/'.$idSocio.'/'.$numReporte) }}" class="btn btn-outline-success col-12 mtop16"><i class="fa-solid fa-file-excel"></i> Excel</a>
                     
                 </div>
 
@@ -40,6 +40,14 @@
                 </div> 
 
                 <div class="card-body">
+                    <div style="text-align: center;">
+                        <h2>
+                            Reporte No. {{$numReporte}} - StocksSys 
+                            
+                        </h2>    
+                        <b>Descripción: </b> {{ obtenerDescripcionReportes(null, $numReporte) }}
+                    </div>
+
                     <b>Total de Escuelas Atendidas @if(isset($solicitud1) ) Pre Primaria a 3ro Primaria @endif : </b>
                     @foreach($total_escuelas as $t)
                          {{$t->total}}
@@ -54,7 +62,8 @@
                                     <td><strong>ALIMENTO</strong></td>
                                     <td><strong>UNIDADES</strong></td>
                                     <td><strong>SACO/CANECA</strong></td>
-                                    <td><strong>LIBRAS/QUINTALES</strong></td>
+                                    <td><strong>LIBRAS</strong></td>
+                                    <td><strong>QUINTALES</strong></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,7 +74,24 @@
                                     <td>{{$a->insumo}}</td>
                                     <td></td>
                                     <td>{{$a->cantidad}}</td>
-                                    <td></td>
+                                   
+                                    @foreach($pesos as $p)     
+                                        
+                                        @if($a->insumo == $p->nombre)
+                                            @foreach($p->pesos_alimento as $pp) 
+                                                @if(Illuminate\Support\Str::lower($a->insumo) != "aceite")
+                                                    <td>{{ $a->cantidad*$pp->libras_x_unidad}} </td>
+                                                @else
+                                                    <td>{{ $a->cantidad*20}} </td>
+                                                @endif
+
+                                                <td>{{ $a->cantidad*$pp->quintales_x_unidad}} </td>
+                                            @endforeach 
+
+                                        @endif
+                                            
+                                        
+                                    @endforeach 
                                 </tr>
 
                             @endif
@@ -92,7 +118,8 @@
                                         <td><strong>ALIMENTO</strong></td>
                                         <td><strong>UNIDADES</strong></td>
                                         <td><strong>SACO/CANECA</strong></td>
-                                        <td><strong>LIBRAS/QUINTALES</strong></td>
+                                        <td><strong>LIBRAS</strong></td>
+                                        <td><strong>QUINTALES</strong></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,7 +130,23 @@
                                         <td>{{$a1->insumo}}</td>
                                         <td></td>
                                         <td>{{$a1->cantidad}}</td>
-                                        <td></td>
+                                        @foreach($pesos as $p)     
+                                        
+                                        @if($a1->insumo == $p->nombre)
+                                            @foreach($p->pesos_alimento as $pp) 
+                                                @if(Illuminate\Support\Str::lower($a1->insumo) != "aceite")
+                                                    <td>{{ $a1->cantidad*$pp->libras_x_unidad}} </td>
+                                                @else
+                                                    <td>{{ $a1->cantidad*20}} </td>
+                                                @endif
+
+                                                <td>{{ $a1->cantidad*$pp->quintales_x_unidad}} </td>
+                                            @endforeach 
+
+                                        @endif
+                                            
+                                        
+                                    @endforeach 
                                     </tr>
 
                                 @endif

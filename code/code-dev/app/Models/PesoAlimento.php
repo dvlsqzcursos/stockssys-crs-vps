@@ -11,7 +11,7 @@ class PesoAlimento extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'pesos_alimentos';
+    protected $table = 'pesos_alimentos'; 
     protected $hidden = ['created_at', 'updated_at'];
 
     protected $casts = [

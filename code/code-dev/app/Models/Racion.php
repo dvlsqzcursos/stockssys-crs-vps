@@ -12,6 +12,13 @@ class Racion extends Model
     use SoftDeletes;
 
     protected $table = 'raciones';
+    protected $fillable = [
+        'nombre',
+        'tipo_alimentos',
+        'asignado_a',
+        'tipo_bodega',
+        'id_institucion'
+    ];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function alimentos(){

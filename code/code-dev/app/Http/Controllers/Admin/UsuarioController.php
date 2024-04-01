@@ -13,8 +13,13 @@ class UsuarioController extends Controller
 
     public function getInicio(){
 
-        $usuarios = Usuario::with(['institucion'])->get();
-        //$usuarios = Usuario::whereNotIn('rol', [0])->get();
+        
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $usuarios = Usuario::with(['institucion'])->get();
+        else:
+            $usuarios = Usuario::with(['institucion'])->where('id_institucion',  Auth::user()->id_institucion)->get();
+        endif;
+
         $contra_prede = Config::get('stocksys.contra_predeterminada').Carbon::now()->format('Y');
         $pin_prede = Config::get('stocksys.pin_predeterminado');
 

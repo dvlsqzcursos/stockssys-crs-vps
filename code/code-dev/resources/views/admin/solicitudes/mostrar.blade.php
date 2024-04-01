@@ -21,13 +21,13 @@
                 <div class="card-body">              
                     <div class="d-grid gap-2  ">
                         <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitudes_despachos') }}"  title="Editar"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
-                        @if(kvfj(Auth::user()->permisos, 'solicitud_rutas'))
+                        @if(kvfj(Auth::user()->permisos, 'solicitud_rutas') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitud_despacho/'.$solicitud->id.'/rutas') }}"  title="Editar"><i class="fa-solid fa-road-circle-exclamation"></i> Administracion Rutas</a>
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'solicitud_rutas_confirmadas'))
                             <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitud_despacho/'.$solicitud->id.'/rutas_confirmadas') }}"  title="Editar"><i class="fa-solid fa-eye"></i> Rutas Confirmadas</a>
                         @endif
-                        @if(kvfj(Auth::user()->permisos, 'solicitud_solicitud_primaria'))
+                        @if(kvfj(Auth::user()->permisos, 'solicitud_solicitud_primaria') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitud_despacho/'.$solicitud->id.'/solicitud_bodega_primaria') }}"  title="Editar"><i class="fa-solid fa-file-circle-exclamation"></i> Solicitud A Bodega</a>
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'solicitud_escuelas'))
@@ -120,7 +120,7 @@
                 <div class="card-header">
                     <h2 class="card-title"><strong><i class="fa-solid fa-file-excel"></i> Información Importada Del Archivo:</strong> {{$solicitud->nombre_archivo}}</h2>
                     <ul>      
-                        @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_registrar'))                 
+                        @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_registrar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)                 
                             <li><a href="{{ url('/admin/solicitud_despacho/detalles/'.$solicitud->id.'/registrar') }}" ><i class="fas fa-plus-circle"></i> Registrar</a></li>
                         @endif
                     </ul>
@@ -167,10 +167,10 @@
                                 <tr>
                                     <td width="240px">
                                         <div class="opts">
-                                            @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_editar'))
+                                            @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_editar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="{{ url('/admin/solicitud_despacho/detalles/'.$sd->id.'/editar') }}"  title="Editar"><i class="fas fa-edit"></i></a>
                                             @endif
-                                            @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_eliminar'))
+                                            @if(kvfj(Auth::user()->permisos, 'solicitud_detalle_eliminar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="#" data-action="eliminar" data-path="admin/solicitud_despacho/detalles" data-object="{{ $sd->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
                                             @endif
                                         </div>

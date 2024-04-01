@@ -121,8 +121,10 @@
                             <label for="name"> <strong>No. Reporte a visualizar: </strong></label>
                             <div class="input-group">           
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                                <select name="num_reporte"  style="width: 90%" >
+                                <select name="num_reporte" id="num_reporte"  style="width: 90%" >
+
                                     @for($i=1; $i <= 17; $i++)
+                                        <option value=""></option>
                                         <option value="{{$i}}">{{$i}}</option>
                                     @endfor
                                 </select>       

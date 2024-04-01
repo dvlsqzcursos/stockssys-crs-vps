@@ -207,6 +207,11 @@ document.addEventListener('DOMContentLoaded', function(){
         allowClear: true
     });
 
+    $("#num_reporte").select2({
+        placeholder: "Seleccione una Opción",
+        allowClear: true
+    });
+
     $(document).on('click', '.dropdown-menu', function (e) {
         e.stopPropagation();
       });

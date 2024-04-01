@@ -34,6 +34,52 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas ON');
+        DB::table('escuelas')->insert(array(
+            'id'=>'1',
+            'jornada'=>0,
+            'codigo'=>'08-07-9615-89',
+            'nombre'=>'EORM Escuela Prueba',
+            'direccion'=>'prueba de direccion',
+            'id_ubicacion'=>5,
+            'director'=>'Juan Ortiz',
+            'contacto_no1'=>55606679,
+            'contacto_no2'=>55606678,
+            'no_ninos_pre'=>25,
+            'no_ninas_pre'=>25,
+            'no_ninos_pri'=>25,
+            'no_ninas_pri'=>25,
+            'no_lideres'=>2,
+            'no_voluntarios'=>10,
+            'no_total_beneficiarios'=>100,
+            'observaciones'=>null,        
+            'estado'=>0,
+            'id_socio'=>2    
+        ));
+
+        DB::table('escuelas')->insert(array(
+            'id'=>'2',
+            'jornada'=>0,
+            'codigo'=>'08-07-9615-90',
+            'nombre'=>'EORM Escuela Prueba',
+            'direccion'=>'prueba de direccion',
+            'id_ubicacion'=>5,
+            'director'=>'Juan Ortiz',
+            'contacto_no1'=>55606679,
+            'contacto_no2'=>55606678,
+            'no_ninos_pre'=>25,
+            'no_ninas_pre'=>25,
+            'no_ninos_pri'=>25,
+            'no_ninas_pri'=>25,
+            'no_lideres'=>2,
+            'no_voluntarios'=>10,
+            'no_total_beneficiarios'=>100,
+            'observaciones'=>null,        
+            'estado'=>0,
+            'id_socio'=>2     
+        ));
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas OFF');
     }
 
     /**

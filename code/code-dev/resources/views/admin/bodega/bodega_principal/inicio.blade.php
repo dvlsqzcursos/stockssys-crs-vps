@@ -20,7 +20,7 @@
                     {!! Form::open(['url' => '/admin/bodega_principal/insumo/registrar', 'files' => true]) !!}
                         @include('admin.bodega.bodega_principal.formulario')
 
-                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_insumo_registrar'))
+                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_insumo_registrar')  && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
                         @endif
                     {!! Form::close() !!}
@@ -57,7 +57,7 @@
                                                     <a href="{{ url('/admin/bodega_principal/insumo/'.$i->id.'/pesos') }}"  title="Pesos"><i class="fa-solid fa-scale-unbalanced-flip"></i></a>
                                                 @endif
                                             @endif
-                                            @if(kvfj(Auth::user()->permisos, 'bodega_principal_eliminar'))
+                                            @if(kvfj(Auth::user()->permisos, 'bodega_principal_eliminar') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="#" data-action="eliminar" data-path="admin/bodega_principal/insumo" data-object="{{ $i->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
                                             @endif
                                         </div>
@@ -96,11 +96,15 @@
                         @if(kvfj(Auth::user()->permisos, 'bodega_principal_solicitudes'))
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/solicitudes_socios') }}" title="Solicitudes de Socios"><i class="fa-solid fa-file"></i> Solicitudes de Socios</a>
                         @endif
-                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_ingresos'))
+                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_ingresos') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/insumo/ingresos') }}" title="Ingresos"><i class="fas fa-plus-circle"></i> Ingresos</a>
                         @endif
-                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_egresos'))
+                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_egresos') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                             <a class="btn btn-outline-primary" href="{{ url('/admin/bodega_principal/insumo/egresos') }}" title="Egresos"><i class="fas fa-minus-circle"></i> Egresos</a>
+                        @endif
+
+                        @if(kvfj(Auth::user()->permisos, 'bodega_principal_movimientos'))
+                            <a  href="#" data-action="movimientos" data-path="admin/bodega_principal/insumo"  class="btn-eliminar btn btn-outline-primary" data-toogle="tooltrip" data-placement="top" title="Egresos" ><i class="fa-solid fa-clock-rotate-left"></i> Ver Historial de Movimientos</a>  
                         @endif
                         
                     </div>

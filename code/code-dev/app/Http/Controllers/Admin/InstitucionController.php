@@ -11,7 +11,11 @@ use Validator, Auth, Hash, Config, Carbon\Carbon;
 class InstitucionController extends Controller
 {
     public function getInicio(){
-        $instituciones = Institucion::with(['ubicacion'])->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $instituciones = Institucion::with(['ubicacion'])->get();
+        else:
+            $instituciones = Institucion::with(['ubicacion'])->where('id', Auth::user()->id_institucion)->get();
+        endif;
 
         $datos = [
             'instituciones' => $instituciones

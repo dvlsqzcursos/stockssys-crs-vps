@@ -12,7 +12,12 @@ class EntregaController extends Controller
 {
     public function getInicio(){
 
-        $entregas = Entrega::where('id_socio',  Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $entregas = Entrega::get();
+        else:
+            $entregas = Entrega::where('id_socio',  Auth::user()->id_institucion)->get();
+        endif;
+        
         $entrega = new Entrega;
 
         $datos = [

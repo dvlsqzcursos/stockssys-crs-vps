@@ -20,8 +20,9 @@
                 <div class="card-body">
                     {!! Form::open(['url' => '/admin/bodega_socio/kit/insumos/asignar', 'files' => true]) !!}
                         @include('admin.bodega.bodega_socio.kits.formulario_insumos')
-
-                        {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
+                        @if(Auth::user()->rol != 0 && Auth::user()->rol != 1)
+                            {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
+                        @endif
                     {!! Form::close() !!}
                 </div>
 

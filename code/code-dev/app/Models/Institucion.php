@@ -12,6 +12,7 @@ class Institucion extends Model
     use SoftDeletes;
 
     protected $table = 'instituciones';
+    protected $fillable = ['nombre', 'direccion', 'nivel', 'id_ubicacion','encargado','contacto','correo','observaciones','estado'];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function ubicacion(){

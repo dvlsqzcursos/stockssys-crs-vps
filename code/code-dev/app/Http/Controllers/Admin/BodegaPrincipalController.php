@@ -12,7 +12,12 @@ use Validator, Auth, Hash, Config, DB, Carbon\Carbon;
 class BodegaPrincipalController extends Controller
 {
     public function getInsumos(){
-        $insumos = Bodega::where('tipo_bodega',0)->where('id_institucion', Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $insumos = Bodega::where('tipo_bodega',0)->get();
+        else:
+            $insumos = Bodega::where('tipo_bodega',0)->where('id_institucion', Auth::user()->id_institucion)->get();
+        endif;
+
         $insumo = new Bodega;
 
         $datos = [
@@ -198,7 +203,11 @@ class BodegaPrincipalController extends Controller
     }
 
     public function getMovimientosIngresos(){ 
-        $ingresos = BodegaIngreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $ingresos = BodegaIngreso::where('tipo_bodega',0)->get();
+        else:
+            $ingresos = BodegaIngreso::where('tipo_bodega',0)->where('id_institucion',Auth::user()->id_institucion)->get();
+        endif;
 
         $datos = [
             'ingresos' => $ingresos
@@ -208,7 +217,12 @@ class BodegaPrincipalController extends Controller
     }
 
     public function getMovimientosIngresoDetalle($id){ 
-        $ingresos = BodegaIngreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $ingresos = BodegaIngreso::where('tipo_bodega',0)->get();
+        else:
+            $ingresos = BodegaIngreso::where('tipo_bodega',0)->where('id_institucion',Auth::user()->id_institucion)->get();
+        endif;
+
         $detalles = BodegaIngresoDetalle::where('id_ingreso', $id)->get();
 
         $datos = [
@@ -220,7 +234,11 @@ class BodegaPrincipalController extends Controller
     }
 
     public function getMovimientosEgresos(){ 
-        $egresos = BodegaEgreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $egresos = BodegaEgreso::where('tipo_bodega',0)->get();
+        else:
+            $egresos = BodegaEgreso::where('tipo_bodega',0)->where('id_institucion',Auth::user()->id_institucion)->get();
+        endif;
 
         $datos = [
             'egresos' => $egresos
@@ -230,7 +248,12 @@ class BodegaPrincipalController extends Controller
     }
 
     public function getMovimientosEgresoDetalle($id){ 
-        $egresos = BodegaEgreso::where('id_institucion',Auth::user()->id_institucion)->get();
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $egresos = BodegaEgreso::where('tipo_bodega',0)->get();
+        else:
+            $egresos = BodegaEgreso::where('tipo_bodega',0)->where('id_institucion',Auth::user()->id_institucion)->get();
+        endif;
+        
         $detalles = BodegaEgresoDetalle::where('id_egreso', $id)->get();
 
         $datos = [

@@ -11,7 +11,13 @@ use Validator, Auth, Hash, Config, Carbon\Carbon;
 class RutaController extends Controller
 {
     public function getInicio(){
-        $rutas = Ruta::with(['ubicacion'])->where('id_socio',  Auth::user()->id_institucion)->get();
+        
+        if(Auth::user()->rol == 0 || Auth::user()->rol == 1 ):
+            $rutas = Ruta::with(['ubicacion'])->get();
+        else:
+            $rutas = Ruta::with(['ubicacion'])->where('id_socio',  Auth::user()->id_institucion)->get();
+        endif;
+
         $ruta = new Ruta;
         $ubicaciones = Ubicacion::with('ubicacion_superior')->where('nivel', 3)->get();
 

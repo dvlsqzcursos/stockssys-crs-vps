@@ -22,11 +22,33 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas ON');
+        DB::table('entregas')->insert(array(
+            'id'=>'1',
+            'correlativo'=>1,
+            'mes_inicial'=>2,
+            'mes_final'=>4,
+            'dias_a_cubrir'=>60,
+            'year'=>2024,
+            'id_socio'=>2      
+        ));
+
+        DB::table('entregas')->insert(array(
+            'id'=>'2',
+            'correlativo'=>1,
+            'mes_inicial'=>2,
+            'mes_final'=>4,
+            'dias_a_cubrir'=>60,
+            'year'=>2024,
+            'id_socio'=>2      
+        ));
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas OFF');
     }
 
     /**
      * Reverse the migrations.
-     */
+     */ 
     public function down(): void
     {
         Schema::dropIfExists('entregas');

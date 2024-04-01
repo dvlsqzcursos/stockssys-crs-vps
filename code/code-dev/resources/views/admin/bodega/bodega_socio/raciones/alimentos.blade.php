@@ -20,8 +20,9 @@
                 <div class="card-body">
                     {!! Form::open(['url' => '/admin/bodega_socio/racion/alimentos/asignar', 'files' => true]) !!}
                         @include('admin.bodega.bodega_socio.raciones.formulario_alimentos')
-
-                        {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
+                        @if(Auth::user()->rol != 0 && Auth::user()->rol != 1)
+                            {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
+                        @endif
                     {!! Form::close() !!}
                 </div>
 
@@ -54,7 +55,7 @@
                                 <tr>
                                     <td width="240px">
                                         <div class="opts">
-                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_racion_alimentos'))
+                                            @if(kvfj(Auth::user()->permisos, 'bodega_socio_racion_alimentos') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
                                                 <a href="#" data-action="eliminar" data-path="admin/bodega_socio/racion/alimentos" data-object="{{ $ar->id }}" class="btn-eliminar" data-toogle="tooltrip" data-placement="top" title="Eliminar" ><i class="fa-solid fa-trash-can"></i></a> 
                                             @endif
                                         </div>

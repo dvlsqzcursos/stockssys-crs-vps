@@ -12,7 +12,7 @@
                 <p class="mtop16"> <b>{{$loop->iteration}}. {{$det->escuela}} - Total Raciones: {{number_format($det->total_raciones)}} </b> </p> @php($total_raciones = $total_raciones +$det->total_raciones )
                 <div class="row mtop16">
                     <div class="col-md-3">
-                        <b style="color:blue;">Niños Pre Primaria a Tercero Primaria</b><br>
+                        <b style="color:blue;">Niños Pre Primaria a Tercero Primaria</b><br> 
                         @php($total_peso_ruta = 0) 
                         @foreach($det_escuelas_preprimaria as $det1)
                             @if($det1->escuela_id == $det->escuela_id)

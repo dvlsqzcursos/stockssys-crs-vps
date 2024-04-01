@@ -4,7 +4,7 @@
             '0' => 'Administrador del Sistema',
             '1' => 'Administrador',
             '2' => 'Encargado (Socio)',
-            '3' => 'Bodega (Socio)',
+            '3' => 'Bodega (Socio)', 
         ];
 
         if(!is_null($modo)):
@@ -65,7 +65,8 @@
             '2'=>'Factura',
             '3'=>'Recibo',
             '4'=>'Perdida/Descarte',
-            '5'=>'Otro',
+            '5'=>'Cuestionable/Cuarentena',
+            '6'=>'Otro',
         ];
 
         
@@ -174,6 +175,34 @@
             return $m;
         else:
             return $m[$id];
+        endif;
+    }
+
+    function obtenerDescripcionReportes($modo, $id){
+        $r = [
+            '1' => 'Total de escuelas despachadas detallando cada tipo de alimento o producto tanto en unidades y su peso en libras/quintales, para cada modalidad escolar, voluntarios y lideres.',
+            '2' => 'Total de escuelas despachadas con Maíz USDA (mismas características del anterior).',
+            '3' => 'Total de escuelas despachadas con Maiz Biofortificado (mismas características del anterior).',
+            '4' => 'Total de escolares despachados (de preprimaria a 6º primaria) mismas características del anterior.',
+            '5' => 'Total de escolares despachados desglosado de prepa a tercero primaria y de cuarto a sexto primaria (mismas características del anterior).',
+            '6' => 'Total de rutas despachadas y cantidad de unidades y su peso por cada ruta.',
+            '7' => 'Total de toneladas métricas de ración escolar completa, desglosada (prepa a 30 y cuarto a sexto).',
+            '8' => 'Todos los datos estadísticos: cantidad de escolares niños, cantidad de escolares niñas, niños de prepa a tercero primaria, niñas de prepa a tercero primaria, niños de cuarto a sexto y niñas de cuarto a sexto. Cantidad de voluntarios total y cantidad de Lideres total.',
+            '9' => 'Reporte de los bimestres despachados en el año: nombre de los meses, numero de dias despachados.',
+            '10' => 'Total de guías despachadas: nombre del municipio, numero de ID de guía, números de boletas de despacho.',
+            '11' => 'Total de solicitudes de alimento en el año (visualizar su descripción).',
+            '12' => 'Saldos de inventario por tipos de alimento u otro artículo. En el caso de alimento por tipo de PL, fecha BUBD del alimento.',
+            '13' => 'Reporte de diferencias de pesos: ingresos y salidas por balance.',
+            '14' => 'Reporte de alimento cuestionable o en estado de cuarentena: unidades y peso.',
+            '15' => 'Reporte de saldo de perdidas o declaración de alimento descartado: unidades y peso.',
+            '16' => 'Reporte de ingresos de guías de transporte de la bodega primaria y de las guías de proveedor de maíz biofortificado: numero de documento, fechas de ingreso, cantidad en unidades y peso, tipos de producto, PL y BUBD.',
+            '17' => 'Registro de datos para muestreos aleatorios: PL y BUBD, tipo de alimento, cantidad en unidades y peso de las muestras (en libras y kilogramos), numero de contrato.'
+        ];
+
+        if(!is_null($modo)):
+            return $r;
+        else:
+            return $r[$id];
         endif;
     }
 

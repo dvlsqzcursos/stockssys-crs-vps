@@ -41,7 +41,7 @@
                                     
                                     <td>{{$e->fecha}}</td>
                                     <td>
-                                        @if(!is_null($e->destino)):
+                                        @if(!is_null($e->destino))
                                             {{ $e->destino }}
                                         @else
                                             {{ $e->escuela->nombre }} <br>
@@ -49,7 +49,7 @@
                                         @endif
                                     </td>
                                     <td>{{ obtenerDocumentosEgreso(null, $e->tipo_documento).' - No. '.$e->no_documento }}</td>
-                                    <td>{{ $e->racion->nombre }}</td>
+                                    <td>{{ isset($e->racion->nombre) }}</td>
                                     <td width="240px">
                                         <div class="opts">
                                             <a class="btn btn-outline-info" href="{{ url('/admin/bodega_socio/insumo/movimientos/egresos/detalles/'.$e->id) }}" ><i class="fa-solid fa-eye"></i> Ver Detalles</a>
