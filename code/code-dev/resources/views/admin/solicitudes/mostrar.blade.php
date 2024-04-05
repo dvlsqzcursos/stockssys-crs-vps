@@ -21,7 +21,7 @@
                 <div class="card-body">              
                     <div class="d-grid gap-2  ">
                         <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitudes_despachos') }}"  title="Editar"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
-                        @if(kvfj(Auth::user()->permisos, 'solicitud_rutas') && Auth::user()->rol != 0 && Auth::user()->rol != 1)
+                        @if(kvfj(Auth::user()->permisos, 'solicitud_rutas'))
                             <a class="btn btn-outline-primary" style=" word-break: break-all; " href="{{ url('/admin/solicitud_despacho/'.$solicitud->id.'/rutas') }}"  title="Editar"><i class="fa-solid fa-road-circle-exclamation"></i> Administracion Rutas</a>
                         @endif
                         @if(kvfj(Auth::user()->permisos, 'solicitud_rutas_confirmadas'))

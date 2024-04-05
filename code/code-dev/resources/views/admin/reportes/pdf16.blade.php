@@ -34,10 +34,16 @@
         <b>Descripción: </b> {{ obtenerDescripcionReportes(null, $numReporte) }}
     </div>
     <br>
+E1-08 90131 - Sebastian Mazariegos
+af: 20441190141101
+2044490141101
+bf Maria Antonieta
+clinica 4 - Dra Patricia 
 
+90440
     <div>
         <p style="text-aling:center; color:red;"><b>Detalle del Reporte</b></p>
-        <table class="table table-striped table-hover mtop16">
+        <table cellpadding="0" cellspacing="0" width="100%" style="font-size: 15px">
             <thead>
                 <tr>
                     <td>FECHA DE INGRESO</td>

@@ -46,7 +46,7 @@
         <p style="text-aling:center; color:red;"><b>Detalle del Reporte</b></p>
         @foreach($solicitud as $s)
             <b>{{$loop->iteration.'. '.$s->escuela_nombre}}</b> - @if(isset($s->total_estudiantes) ) <b>Total de Estudiantes Atendidos: </b> {{$s->total_estudiantes}} -  @endif  <b>Tipo Ración:</b> {{$s->racion}}  <br>
-            <table class="table table-striped table-hover mtop16">
+            <table  cellpadding="0" cellspacing="0" width="100%" style="font-size: 15px">
                 <thead>
                     <tr>
                         <td><strong>ALIMENTO</strong></td>
@@ -101,7 +101,7 @@
             <p style="text-aling:center; color:red;"><b>Detalle del Reporte</b></p>
             @foreach($solicitud1 as $s1)
                 <b>{{$loop->iteration.'. '.$s1->escuela_nombre}}</b> - @if(isset($s1->total_estudiantes) ) <b>Total de Estudiantes Atendidos: </b> {{$s1->total_estudiantes}} -  @endif  <b>Tipo Ración:</b> {{$s1->racion}}  <br>
-                <table class="table table-striped table-hover mtop16">
+                <table cellpadding="0" cellspacing="0" width="100%" style="font-size: 15px">
                     <thead>
                         <tr>
                             <td><strong>ALIMENTO</strong></td>
