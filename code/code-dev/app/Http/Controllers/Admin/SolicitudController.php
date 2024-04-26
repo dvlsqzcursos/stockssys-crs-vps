@@ -1222,7 +1222,7 @@ class SolicitudController extends Controller
             $det_escuelas_primaria_enc =  DB::table('solicitud_detalles')
                 ->select(
                     DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                    DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                    DB::raw('SUM(solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('SUM(Distinct solicitud_detalles.total_cuarto_a_sexto) as total_beneficiarios'),
                     DB::raw('raciones.nombre as racion'),
                 )
@@ -1235,7 +1235,7 @@ class SolicitudController extends Controller
             $det_escuelas_primaria = DB::table('solicitud_detalles')
                 ->select(
                     DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                    DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                    DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('SUM(Distinct solicitud_detalles.total_cuarto_a_sexto) as total_beneficiarios'),
                     DB::raw('bodegas.id as alimento_id'),
                     DB::raw('bodegas.nombre as alimento'),
@@ -1255,7 +1255,7 @@ class SolicitudController extends Controller
             $det_escuelas_primaria_enc =  DB::table('solicitud_detalles')
                 ->select(
                     DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                    DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                    DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('SUM(Distinct solicitud_detalles.total_cuarto_a_sexto) as total_beneficiarios'),
                     DB::raw('raciones.nombre as racion'),
                 )
@@ -1268,7 +1268,7 @@ class SolicitudController extends Controller
             $det_escuelas_primaria = DB::table('solicitud_detalles')
                 ->select(
                     DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                    DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                    DB::raw('SUM(solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('SUM(Distinct solicitud_detalles.total_cuarto_a_sexto) as total_beneficiarios'),
                     DB::raw('bodegas.id as alimento_id'),
                     DB::raw('bodegas.nombre as alimento'),
