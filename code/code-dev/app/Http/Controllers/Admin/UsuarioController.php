@@ -144,7 +144,7 @@ class UsuarioController extends Controller
             else:
                 $usuario->apellidos = e($request->input('apellidos'));
             endif;
-            
+            $usuario->rol = $request->input('rol');    
             $usuario->contacto = e($request->input('contacto'));
             $usuario->correo = e($request->input('correo'));
             $usuario->puesto = e($request->input('puesto'));

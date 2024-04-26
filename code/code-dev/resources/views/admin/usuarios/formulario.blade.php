@@ -157,7 +157,7 @@
             <label for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Rol: </strong></label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                {!! Form::text('rol', obtenerRoles(null, $usuario->rol), ['class'=>'form-control', 'readonly']) !!}
+                {!! Form::select('rol', obtenerRoles('list', null), $usuario->rol ,['class'=>'form-select', 'id' => 'rol', 'style' => 'width: 95%']) !!}
             </div>
         </div>
 

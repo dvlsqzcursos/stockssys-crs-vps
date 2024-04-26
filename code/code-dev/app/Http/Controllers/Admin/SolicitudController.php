@@ -646,8 +646,8 @@ class SolicitudController extends Controller
             $det_escuelas_preprimaria =  DB::table('solicitud_detalles')
                 ->select(
                     DB::raw('escuelas.id as escuela_id'),
-                    DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('SUM(Distinct solicitud_detalles.total_pre_primaria_a_tercero_primaria) as total_ninos'),
+                    DB::raw('SUM(solicitud_detalles.dias_de_solicitud) as dias'),
                     DB::raw('solicitud_detalles.tipo_de_actividad_alimentos as racion'),
                     DB::raw('alimentos_racion.peso as peso_racion')
                 )
@@ -661,8 +661,8 @@ class SolicitudController extends Controller
                 ->where('solicitud_detalles.deleted_at', null)
                 ->groupBy('escuelas.id', 'solicitud_detalles.tipo_de_actividad_alimentos', 'alimentos_racion.peso')
                 ->get();
-
-            //return $det_escuelas_preprimaria;
+            
+                return $det_escuelas_preprimaria;
 
             if(isset($id_escolar2_racion) ):
                 //return $id_escolar2_racion;
@@ -1189,7 +1189,7 @@ class SolicitudController extends Controller
         $det_escuelas_preprimaria_enc =  DB::table('solicitud_detalles')
             ->select(
                 DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
                 DB::raw('SUM(Distinct solicitud_detalles.total_pre_primaria_a_tercero_primaria) as total_beneficiarios'),
                 DB::raw('raciones.nombre as racion'),
             )
@@ -1202,7 +1202,7 @@ class SolicitudController extends Controller
         $det_escuelas_preprimaria =  DB::table('solicitud_detalles')
             ->select(
                 DB::raw('solicitud_detalles.id_escuela as escuela_id'),
-                DB::raw('SUM(Distinct solicitud_detalles.dias_de_solicitud) as dias'),
+                DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
                 DB::raw('SUM(Distinct solicitud_detalles.total_pre_primaria_a_tercero_primaria) as total_beneficiarios'),
                 DB::raw('bodegas.id as alimento_id'),
                 DB::raw('bodegas.nombre as alimento'),
