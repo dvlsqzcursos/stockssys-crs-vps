@@ -1170,7 +1170,7 @@ class SolicitudController extends Controller
                 $id_lideres_racion = $r->id;
             endif;
 
-            if($r->nombre =="Docentes y Voluntarios"):
+            if($r->nombre =="Voluntarios"):
                 $id_do_vo_racion = $r->id;
             endif;                
         endforeach;
@@ -1298,7 +1298,7 @@ class SolicitudController extends Controller
             ->where('solicitud_detalles.tipo_de_actividad_alimentos', $id_lideres_racion)                
             ->where('solicitud_detalles.deleted_at', null)
             ->groupBy('solicitud_detalles.id_escuela', 'raciones.nombre')
-            ->get();
+            ->get(); 
         $det_escuelas_l = DB::table('solicitud_detalles')
             ->select(
                 DB::raw('solicitud_detalles.id_escuela as escuela_id'),
@@ -1353,7 +1353,7 @@ class SolicitudController extends Controller
             ->get();
 
 
-        $alimentos = Bodega::where('tipo_bodega', 1)
+        $alimentos = Bodega::where('tipo_bodega', 1) 
             ->where('id_institucion', Auth::user()->id_institucion)
             ->get();
 
@@ -1460,7 +1460,268 @@ class SolicitudController extends Controller
         endif;
     }
 
+    public function postDespacharEscolares(Request $request){
+        $escuela = Escuela::where('id', $request->input('idEscuela'))->first();
 
+        $saldos = DB::table('bodegas as b')
+        ->select(
+            DB::RAW('b.id as id_insumo'),
+            DB::RAW('bi_det.pl as pl'),
+            DB::RAW('bi_det.bubd as bubd'),
+            DB::RAW('(bi_det.no_unidades - bi_det.no_unidades_usadas) as disponible')
+        )
+        ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
+        ->where('b.id_institucion', Auth::user()->id_institucion)  
+        ->where('b.tipo_bodega', 1) 
+        ->orderBy('bi_det.bubd')
+        ->get();
+
+        $racion = Racion::with('alimentos')->where('nombre', 'like', '%escolar')->where('id_institucion', Auth::user()->id_institucion)->get();
+        foreach($racion  as $r):
+            $actividad = $r->id;
+            $alimentos = $r->alimentos;
+        endforeach;
+        //return $saldos;
+        //return $request->all();
+
+        $descarga =  DB::table('solicitud_detalles')
+            ->select(
+                DB::raw('solicitud_detalles.id_escuela as escuela_id'),
+                DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
+                DB::raw('SUM(Distinct solicitud_detalles.total_pre_primaria_a_tercero_primaria) as total_beneficiarios'),
+                DB::raw('raciones.nombre as racion'),
+            )
+            ->join('raciones', 'raciones.id', 'solicitud_detalles.tipo_de_actividad_alimentos')
+            ->where('solicitud_detalles.id_solicitud', $request->input('idSolicitud'))  
+            ->where('solicitud_detalles.id_escuela', $request->input('idEscuela'))   
+            ->where('solicitud_detalles.tipo_de_actividad_alimentos', $actividad)            
+            ->where('solicitud_detalles.deleted_at', null)
+            ->groupBy('solicitud_detalles.id_escuela', 'raciones.nombre')
+            ->get();
+            //return $descarga;
+        
+        foreach($descarga as $d):
+            $dias = $d->dias;
+            $beneficiarios = $d->total_beneficiarios;
+        endforeach;
+
+        //return Carbon::now()->format('Y-m-d');
+
+        $be = new BodegaEgreso;
+        $be->fecha = Carbon::now()->format('Y-m-d');
+        $be->tipo_documento = 1;
+        $be->no_documento = $request->input('no_boleta');
+        $be->id_solicitud_despacho = $request->input('idSolicitud');
+        $be->id_escuela_despacho = $request->input('idEscuela');
+        $be->tipo_racion = $actividad;
+        $be->participantes = $beneficiarios;
+        $be->tipo_bodega = 1;
+        $be->id_institucion = Auth::user()->id_institucion;
+        $be->save();
+
+        $cont=0;
+
+        while ($cont<count($alimentos)) {
+            $detalle=new BodegaEgresoDetalle();
+            $detalle->id_egreso = $be->id;
+            $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
+            foreach($saldos as $s):
+                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
+                    if($s->disponible > 0 ):
+                        $detalle->pl = $s->pl;
+                    endif;
+                endif;
+            endforeach;    
+            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
+            $detalle->save();
+            $cont=$cont+1;
+        }
+
+        $b = new Bitacora;
+        $b->accion = 'Despacho automatico de raciones escolares para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
+        $b->id_usuario = Auth::id();
+        $b->save();
+
+        return back()->with('messages', '¡Despacho realizado con exito!.')
+            ->with('typealert', 'success');
+                 
+    }
+
+    public function postDespacharLideres(Request $request){
+        $escuela = Escuela::where('id', $request->input('idEscuela'))->first();
+
+        $saldos = DB::table('bodegas as b')
+        ->select(
+            DB::RAW('b.id as id_insumo'),
+            DB::RAW('bi_det.pl as pl'),
+            DB::RAW('bi_det.bubd as bubd'),
+            DB::RAW('(bi_det.no_unidades - bi_det.no_unidades_usadas) as disponible')
+        )
+        ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
+        ->where('b.id_institucion', Auth::user()->id_institucion)  
+        ->where('b.tipo_bodega', 1) 
+        ->orderBy('bi_det.bubd')
+        ->get();
+
+        $racion = Racion::with('alimentos')->where('nombre', 'like', '%lideres')->where('id_institucion', Auth::user()->id_institucion)->get();
+        //return $racion;
+        foreach($racion  as $r):
+            $actividad = $r->id;
+            $alimentos = $r->alimentos;
+        endforeach;
+        //return $saldos;
+
+        $descarga =  DB::table('solicitud_detalles')
+            ->select(
+                DB::raw('solicitud_detalles.id_escuela as escuela_id'),
+                DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
+                DB::raw('SUM(Distinct solicitud_detalles.total_de_personas) as total_beneficiarios'),
+                DB::raw('raciones.nombre as racion'),
+            )
+            ->join('raciones', 'raciones.id', 'solicitud_detalles.tipo_de_actividad_alimentos')
+            ->where('solicitud_detalles.id_solicitud', $request->input('idSolicitud'))  
+            ->where('solicitud_detalles.id_escuela', $request->input('idEscuela'))   
+            ->where('solicitud_detalles.tipo_de_actividad_alimentos', $actividad)            
+            ->where('solicitud_detalles.deleted_at', null)
+            ->groupBy('solicitud_detalles.id_escuela', 'raciones.nombre')
+            ->get();
+            //return $descarga;
+        
+        foreach($descarga as $d):
+            $dias = $d->dias;
+            $beneficiarios = $d->total_beneficiarios;
+        endforeach;
+
+        //return Carbon::now()->format('Y-m-d');
+
+        $be = new BodegaEgreso;
+        $be->fecha = Carbon::now()->format('Y-m-d');
+        $be->tipo_documento = 1;
+        $be->no_documento = $request->input('no_boleta');
+        $be->id_solicitud_despacho = $request->input('idSolicitud');
+        $be->id_escuela_despacho = $request->input('idEscuela');
+        $be->tipo_racion = $actividad;
+        $be->participantes = $beneficiarios;
+        $be->tipo_bodega = 1;
+        $be->id_institucion = Auth::user()->id_institucion;
+        $be->save();
+
+        $cont=0;
+
+        while ($cont<count($alimentos)) {
+            $detalle=new BodegaEgresoDetalle();
+            $detalle->id_egreso = $be->id;
+            $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
+            foreach($saldos as $s):
+                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
+                    if($s->disponible > 0 ):
+                        $detalle->pl = $s->pl;
+                    endif;
+                endif;
+            endforeach;    
+            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
+            $detalle->save();
+            $cont=$cont+1;
+        }
+
+        $b = new Bitacora;
+        $b->accion = 'Despacho automatico de raciones de lideres para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
+        $b->id_usuario = Auth::id();
+        $b->save();
+
+        return back()->with('messages', '¡Despacho realizado con exito!.')
+            ->with('typealert', 'success');
+                 
+    }
+
+    public function postDespacharVoluntarios(Request $request){
+        $idSolicitud = $request->input('idSolicitud');
+        $idEscuela = $request->input('idEscuela');
+        $escuela = Escuela::where('id', $idEscuela)->first();
+
+        $saldos = DB::table('bodegas as b')
+        ->select(
+            DB::RAW('b.id as id_insumo'),
+            DB::RAW('bi_det.pl as pl'),
+            DB::RAW('bi_det.bubd as bubd'),
+            DB::RAW('(bi_det.no_unidades - bi_det.no_unidades_usadas) as disponible')
+        )
+        ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
+        ->where('b.id_institucion', Auth::user()->id_institucion)  
+        ->where('b.tipo_bodega', 1) 
+        ->orderBy('bi_det.bubd')
+        ->get();
+
+        $racion = Racion::with('alimentos')->where('nombre', 'like', '%voluntario')->where('id_institucion', Auth::user()->id_institucion)->get();
+        foreach($racion  as $r):
+            $actividad = $r->id;
+            $alimentos = $r->alimentos;
+        endforeach;
+        //return $saldos;
+        //return $request->all();
+
+        $descarga =  DB::table('solicitud_detalles')
+            ->select(
+                DB::raw('solicitud_detalles.id_escuela as escuela_id'),
+                DB::raw('SUM( solicitud_detalles.dias_de_solicitud) as dias'),
+                DB::raw('SUM(Distinct solicitud_detalles.total_de_personas) as total_beneficiarios'),
+                DB::raw('raciones.nombre as racion'),
+            )
+            ->join('raciones', 'raciones.id', 'solicitud_detalles.tipo_de_actividad_alimentos')
+            ->where('solicitud_detalles.id_solicitud', $idSolicitud)  
+            ->where('solicitud_detalles.id_escuela', $idEscuela)   
+            ->where('solicitud_detalles.tipo_de_actividad_alimentos', $actividad)            
+            ->where('solicitud_detalles.deleted_at', null)
+            ->groupBy('solicitud_detalles.id_escuela', 'raciones.nombre')
+            ->get();
+            //return $descarga;
+        
+        foreach($descarga as $d):
+            $dias = $d->dias;
+            $beneficiarios = $d->total_beneficiarios;
+        endforeach;
+
+        //return Carbon::now()->format('Y-m-d');
+
+        $be = new BodegaEgreso;
+        $be->fecha = Carbon::now()->format('Y-m-d');
+        $be->tipo_documento = 1;
+        $be->no_documento = $request->input('no_boleta');
+        $be->id_solicitud_despacho = $idSolicitud;
+        $be->id_escuela_despacho = $idEscuela;
+        $be->tipo_racion = $actividad;
+        $be->participantes = $beneficiarios;
+        $be->tipo_bodega = 1;
+        $be->id_institucion = Auth::user()->id_institucion;
+        $be->save();
+
+        $cont=0;
+
+        while ($cont<count($alimentos)) {
+            $detalle=new BodegaEgresoDetalle();
+            $detalle->id_egreso = $be->id;
+            $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
+            foreach($saldos as $s):
+                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
+                    if($s->disponible > 0 ):
+                        $detalle->pl = $s->pl;
+                    endif;
+                endif;
+            endforeach;    
+            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
+            $detalle->save();
+            $cont=$cont+1;
+        }
+
+        $b = new Bitacora;
+        $b->accion = 'Despacho automatico de raciones de voluntarios para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$idSolicitud;
+        $b->id_usuario = Auth::id();
+        $b->save();
+
+        return back()->with('messages', '¡Despacho realizado con exito!.')
+            ->with('typealert', 'success');
+                 
+    }
 
 
 }

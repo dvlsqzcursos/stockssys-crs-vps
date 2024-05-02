@@ -290,15 +290,6 @@ class BodegaSocioController extends Controller
                     $cont=$cont+1;
                 }
 
-                foreach($alimentos as $a):
-                    $detalle=new BodegaEgresoDetalle();
-                    $detalle->id_egreso = $be->id;
-                    $detalle->id_insumo = $a->id;
-                    $detalle->pl = 0;
-                    $detalle->no_unidades = 0;
-                    $detalle->save();
-                endforeach;
-
             DB::commit();
 
             if($be->save()):

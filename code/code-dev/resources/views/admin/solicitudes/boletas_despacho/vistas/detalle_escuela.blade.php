@@ -140,7 +140,7 @@
                                                         <td>{{ $det->no_unidades*$p->libras_x_unidad}} </td>
                                                     @else
                                                         <td>{{ $det->no_unidades*20}} </td>
-                                                    @endif
+                                                    @endif 
                                                     
                                                 @endforeach 
                                             <td>{{ $det->no_unidades}}</td>

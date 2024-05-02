@@ -23,7 +23,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas ON');
+        /*DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas ON');
         DB::table('entregas')->insert(array(
             'id'=>'1',
             'correlativo'=>1,
@@ -43,7 +43,7 @@ return new class extends Migration
             'year'=>2024,
             'id_socio'=>2      
         ));
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas OFF');
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT entregas OFF');*/
     }
 
     /**

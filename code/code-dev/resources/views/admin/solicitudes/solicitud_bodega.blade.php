@@ -1,6 +1,3 @@
-<?php set_time_limit(0);
-ini_set("memory_limit",-1);
-ini_set('max_execution_time', 0); ?>
 @extends('admin.plantilla.master')
 @section('title','Solicitud A Bodega Primaria')
 
@@ -19,89 +16,164 @@ ini_set('max_execution_time', 0); ?>
                     
                 </div>
 
-                <div class="card-body" style="text-align:center;  overflow-y: scroll; line-height: 1em; height:400px;">
+                <div class="card-body" style="text-align:center;  overflow-y: scroll; line-height: 1em; height:400px; font-size:18px;">
                     @foreach($escuelas as $e)
                         <p style="color: blue;"><b>{{ $loop->iteration.'. '.$e->escuela }} </b></p>
                         <div class="row">
                             <div class="col-md-3" >
                                 @foreach($det_escuelas_preprimaria_enc as $det_preprimaria_enc)
                                     @if($det_preprimaria_enc->escuela_id == $e->escuela_id)    
-                                        <b>Racion: </b>  {{ $det_preprimaria_enc->racion}} &nbsp                                    
-                                        <b>Dias: </b>  {{ $det_preprimaria_enc->dias}} &nbsp
-                                        <b>Total Beneficiarios: </b>  {{ $det_preprimaria_enc->total_beneficiarios}} 
+                                        Racion:  <b> {{ $det_preprimaria_enc->racion}}</b> &nbsp                                    
+                                        Dias: <b>{{ $det_preprimaria_enc->dias}} </b>&nbsp
+                                        Total Beneficiarios:   <b>{{ $det_preprimaria_enc->total_beneficiarios}}  </b>
                                     @endif                                   
                                 @endforeach 
                                 <br>
-                                <b>Desgloce: </b>  
+                                <b>Desgloce: </b>  <br>
                                 <br>                           
                                 @foreach($det_escuelas_preprimaria as $det_preprimaria)
                                     @if($det_preprimaria->escuela_id == $e->escuela_id)                                        
-                                        <b><i class="fa-solid fa-caret-right"></i> Alimento: </b>{{ $det_preprimaria->alimento}} <b>Peso (gr.): </b>{{ $det_preprimaria->alimento_peso}} <br>
-                                        <b>Gramos: </b>{{ number_format( ($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso), 2, '.', ',' )}} &nbsp
-                                        <b>Quintales: </b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}} &nbsp
-                                        <b>Unidades Racion: </b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/1000)/50), 2, '.', ',' )}} <br>
+                                        <b><i class="fa-solid fa-caret-right"></i></b> Alimento: <b>{{ $det_preprimaria->alimento}}</b> Peso Ración (gr.): <b>{{ $det_preprimaria->alimento_peso}} </b><br>
+                                        @if( Illuminate\Support\Str::lower($det_preprimaria->alimento) != "aceite" )
+                                        - Gramos: <b>{{ number_format( ($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso), 2, '.', ',' )}} </b><br>
+                                        - Quintales: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}} </b><br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/1000)/50), 2, '.', ',' )}} </b> <br>
+                                        @else
+                                        - Gramos: <b>{{ number_format( ($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso), 2, '.', ',' )}} </b><br>
+                                        - Quintales: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}} </b><br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/1000)/18.5), 2, '.', ',' )}} </b> <br>
+                                        @endif
+                                        <br>
                                     @endif
                                 @endforeach 
                             </div>
                             <div class="col-md-3">
                                 @foreach($det_escuelas_primaria_enc as $det_primaria_enc)
                                     @if($det_primaria_enc->escuela_id == $e->escuela_id)    
-                                        <b>Racion: </b>  {{ $det_primaria_enc->racion}} &nbsp                                    
-                                        <b>Dias: </b>  {{ $det_primaria_enc->dias}} &nbsp
-                                        <b>Total Beneficiarios: </b>  {{ $det_primaria_enc->total_beneficiarios}} 
+                                        Racion:  <b>{{ $det_primaria_enc->racion}}</b>  &nbsp                                    
+                                        Dias:  <b>{{ $det_primaria_enc->dias}} </b> &nbsp
+                                        Total Beneficiarios:  <b> {{ $det_primaria_enc->total_beneficiarios}} </b> 
                                     @endif                                   
                                 @endforeach 
                                 <br>
-                                <b>Desgloce: </b>  
+                                <b>Desgloce: </b>  <br>
                                 <br>        
                                 @foreach($det_escuelas_primaria as $det_primaria)
                                     @if($det_primaria->escuela_id == $e->escuela_id)                                        
-                                        <b><i class="fa-solid fa-caret-right"></i> Alimento: </b>{{ $det_primaria->alimento}} <b>Peso (gr.): </b>{{ $det_primaria->alimento_peso}} <br>
-                                        <b>Gramos: </b>{{ number_format( ($det_primaria->dias*$det_primaria->total_beneficiarios*$det_primaria->alimento_peso), 2, '.', ',' )}} &nbsp
-                                        <b>Quintales: </b>{{ number_format( ((($det_primaria->dias*$det_primaria->total_beneficiarios*$det_primaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}} &nbsp
-                                        <b>Unidades Racion: </b>{{ number_format( ((($det_primaria->dias*$det_primaria->total_beneficiarios*$det_primaria->alimento_peso)/1000)/50), 2, '.', ',' )}} <br>
+                                        <b><i class="fa-solid fa-caret-right"></i></b>  Alimento: <b>{{ $det_primaria->alimento}} </b>Peso Ración (gr.): <b>{{ $det_primaria->alimento_peso}}</b>  <br>
+                                        @if( Illuminate\Support\Str::lower($det_preprimaria->alimento) != "aceite" )
+                                        - Gramos: <b>{{ number_format( ($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso), 2, '.', ',' )}} </b>  <br>
+                                        - Quintales: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}}</b>  <br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/1000)/50), 2, '.', ',' )}} </b> <br>
+                                        @else
+                                        - Gramos: <b>{{ number_format( ($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso), 2, '.', ',' )}}</b>  <br>
+                                        - Quintales: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/453.59237)/100), 2, '.', ',' )}} </b> <br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_preprimaria->dias*$det_preprimaria->total_beneficiarios*$det_preprimaria->alimento_peso)/1000)/18.5), 2, '.', ',' )}} </b> <br>
+                                        @endif
+                                        <br>
                                     @endif
                                 @endforeach 
                             </div>
+                            
                             <div class="col-md-3">
                                 @foreach($det_escuelas_l_enc as $det_l_enc)
                                     @if($det_l_enc->escuela_id == $e->escuela_id)    
-                                        <b>Racion: </b>  {{ $det_l_enc->racion}} &nbsp                                    
-                                        <b>Dias: </b>  {{ $det_l_enc->dias}} &nbsp
-                                        <b>Total Beneficiarios: </b>  {{ $det_l_enc->total_beneficiarios}} 
+                                        Racion: <b>  {{ $det_l_enc->racion}} </b>  &nbsp                                    
+                                        Dias: <b>  {{ $det_l_enc->dias}} </b> &nbsp
+                                        Total Beneficiarios: <b>  {{ $det_l_enc->total_beneficiarios}} </b> 
                                     @endif                                   
                                 @endforeach 
                                 <br>
-                                <b>Desgloce: </b>  
+                                <b>Desgloce: </b>  <br>
                                 <br>         
                                 @foreach($det_escuelas_l as $det_l)
                                     @if($det_l->escuela_id == $e->escuela_id)                                        
-                                        <b><i class="fa-solid fa-caret-right"></i> Alimento: </b>{{ $det_l->alimento}} <b>Peso (lbs.): </b>{{ $det_l->alimento_peso}} <br>
-                                        <b>Libras: </b>{{ number_format( ($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso), 2, '.', ',' )}} &nbsp
-                                        <b>Quintales: </b>{{ number_format( ((($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso))/100), 2, '.', ',' )}} &nbsp
-                                        <b>Unidades Racion: </b>{{ number_format( ((($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso)/110)), 2, '.', ',' )}} <br>
+                                        <b><i class="fa-solid fa-caret-right"></i> </b> Alimento: <b>{{ $det_l->alimento}} </b>Peso Ración (lbs.): <b>{{ $det_l->alimento_peso}} </b>  <br>
+                                        - Libras: <b>{{ number_format( ($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso), 2, '.', ',' )}} </b>  <br>
+                                        - Quintales: <b>{{ number_format( ((($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso))/100), 2, '.', ',' )}}</b>  <br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_l->dias*$det_l->total_beneficiarios*$det_l->alimento_peso)/110)), 2, '.', ',' )}}</b>  <br>
+                                        <br>
                                     @endif
                                 @endforeach
                             </div>
                             <div class="col-md-3">
                                 @foreach($det_escuelas_v_d_enc as $det_v_d_enc)
                                     @if($det_v_d_enc->escuela_id == $e->escuela_id)    
-                                        <b>Racion: </b>  {{ $det_v_d_enc->racion}} &nbsp                                    
-                                        <b>Dias: </b>  {{ $det_v_d_enc->dias}} &nbsp
-                                        <b>Total Beneficiarios: </b>  {{ $det_v_d_enc->total_beneficiarios}} 
+                                        Racion: <b>  {{ $det_v_d_enc->racion}} </b>  &nbsp                                    
+                                        Dias: <b>  {{ $det_v_d_enc->dias}}</b>  &nbsp
+                                        Total Beneficiarios: <b>  {{ $det_v_d_enc->total_beneficiarios}} </b> 
                                     @endif                                   
                                 @endforeach 
                                 <br>
-                                <b>Desgloce: </b>  
+                                <b>Desgloce: </b>  <br>
                                 <br>        
                                 @foreach($det_escuelas_v_d as $det_v_d)
                                     @if($det_v_d->escuela_id == $e->escuela_id)                                        
-                                    <b><i class="fa-solid fa-caret-right"></i> Alimento: </b>{{ $det_v_d->alimento}} <b>Peso (lbs.): </b>{{ $det_v_d->alimento_peso}} <br>
-                                        <b>Libras: </b>{{ number_format( ($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso), 2, '.', ',' )}} &nbsp
-                                        <b>Quintales: </b>{{ number_format( ((($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso)/100)), 2, '.', ',' )}} &nbsp
-                                        <b>Unidades Racion: </b>{{ number_format( ((($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso)/110)), 2, '.', ',' )}} <br>
+                                    <b><i class="fa-solid fa-caret-right"></i></b>  Alimento: <b>{{ $det_v_d->alimento}} </b>Peso Ración (lbs.): <b>{{ $det_v_d->alimento_peso}} </b>  <br>
+                                        - Libras: <b>{{ number_format( ($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso), 2, '.', ',' )}}</b>  <br>
+                                        - Quintales: <b>{{ number_format( ((($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso)/100)), 2, '.', ',' )}}</b>  <br>
+                                        - Unidades Racion: <b>{{ number_format( ((($det_v_d->dias*$det_v_d->total_beneficiarios*$det_v_d->alimento_peso)/110)), 2, '.', ',' )}}</b>  <br>
+                                        <br>
                                     @endif
                                 @endforeach
+                            </div>
+                        </div>
+                        <div class="row mtop16">
+                            <span style="text-align:center; color: red; text-size:12px; font-weight: bold;">
+                                Despacho de Raciones 
+                            </span>
+                            <div class="col-md-6">
+                                {!! Form::open(['url' => '/admin/solicitud_despacho/despachar/escolar', 'files' => true]) !!}
+                                    <div class="col-md-12 mtop16">
+                                        <span style="text-align:center; color: blue; text-size:10px; font-weight: bold;">
+                                            Despacho de Raciones Escolares
+                                        </span>
+                                        <br>
+                                        <label class="mtop16" for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Ingresar El Número de Boleta: </strong></label>
+                                        <div class="input-group">           
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                            {!! Form::hidden('idEscuela', $e->escuela_id, ['class'=>'form-control']) !!}   
+                                            {!! Form::hidden('idSolicitud', $solicitud, ['class'=>'form-control']) !!}  
+                                            {!! Form::text('no_boleta',0, ['class'=>'form-control','required']) !!}            
+                                        </div>
+                                    </div>   
+                                    {!! Form::submit('Despachar', ['class'=>'btn btn-success mtop16']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                            <div class="col-md-3">
+                                {!! Form::open(['url' => '/admin/solicitud_despacho/despachar/lideres', 'files' => true]) !!}
+                                    <div class="col-md-12 mtop16"><span style="text-align:center; color: blue; text-size:10px; font-weight: bold;">
+                                            Despacho de Raciones Lideres
+                                        </span>
+                                        <br>
+                                        <label class="mtop16" for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Ingresar El Número de Boleta: </strong></label>
+                                        <div class="input-group">           
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                            {!! Form::hidden('idEscuela', $e->escuela_id, ['class'=>'form-control']) !!}   
+                                            {!! Form::hidden('idSolicitud', $solicitud, ['class'=>'form-control']) !!}  
+                                            {!! Form::text('no_boleta',0, ['class'=>'form-control','required']) !!}            
+                                        </div>
+                                    </div>   
+                                    {!! Form::submit('Despachar', ['class'=>'btn btn-success mtop16']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                            <div class="col-md-3">
+                                {!! Form::open(['url' => '/admin/solicitud_despacho/despachar/voluntarios', 'files' => true]) !!}
+                                    <div class="col-md-12 mtop16">
+                                        <span style="text-align:center; color: blue; text-size:10px; font-weight: bold;">
+                                            Despacho de Raciones Voluntarios
+                                        </span>
+                                        <br>
+                                        <label class="mtop16" for="name"> <strong><sup ><i class="fa-solid fa-triangle-exclamation"></i></sup> Ingresar El Número de Boleta: </strong></label>
+                                        <div class="input-group">           
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                            {!! Form::hidden('idEscuela', $e->escuela_id, ['class'=>'form-control']) !!}   
+                                            {!! Form::hidden('idSolicitud', $solicitud, ['class'=>'form-control']) !!}  
+                                            {!! Form::text('no_boleta',0, ['class'=>'form-control','required']) !!}            
+                                        </div>
+                                    </div>   
+                                    {!! Form::submit('Despachar', ['class'=>'btn btn-success mtop16']) !!}
+                                {!! Form::close() !!}
                             </div>
                         </div>
                         <br><hr>

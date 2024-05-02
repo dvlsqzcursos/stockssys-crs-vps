@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('id_unidad_medida')->nullable(); 
             $table->integer('categoria')->nullable();
-            $table->integer('saldo')->nullable();
+            $table->double('saldo',13, 5)->nullable();
             $table->string('observaciones', 500)->nullable();            
             $table->integer('tipo_bodega');
             $table->integer('id_institucion');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas ON');
+        /*DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas ON');
         DB::table('bodegas')->insert(array(
             'id'=>'1',
             'nombre'=>'Maiz USDA',
@@ -46,7 +46,7 @@ return new class extends Migration
             'tipo_bodega'=>1,
             'id_institucion'=>2,    
         ));
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas OFF');
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT bodegas OFF');*/
     }
 
     /**

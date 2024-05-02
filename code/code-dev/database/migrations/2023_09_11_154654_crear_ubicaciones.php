@@ -29,7 +29,7 @@ return new class extends Migration
             'id_principal'=>NULL           
         ));
 
-        DB::table('ubicaciones')->insert(array(
+        /*DB::table('ubicaciones')->insert(array(
             'id'=>'2',
             'nombre'=>'Quetzaltenango',
             'nomenclatura'=>NULL ,
@@ -43,7 +43,7 @@ return new class extends Migration
             'nomenclatura'=>'Quetgo',
             'nivel'=>'3',
             'id_principal'=>'2'           
-        ));
+        ));*/
         DB::unprepared('SELECT 1; SET IDENTITY_INSERT ubicaciones OFF');
     }
 

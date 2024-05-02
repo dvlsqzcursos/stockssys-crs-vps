@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bitacoras', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('accion',500);
+            $table->string('accion',1000);
             $table->integer('id_usuario');
             $table->timestamps();
         });

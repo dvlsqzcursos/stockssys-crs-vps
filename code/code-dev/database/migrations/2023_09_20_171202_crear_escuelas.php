@@ -35,7 +35,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas ON');
+        /*DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas ON');
         DB::table('escuelas')->insert(array(
             'id'=>'1',
             'jornada'=>0,
@@ -79,7 +79,7 @@ return new class extends Migration
             'estado'=>0,
             'id_socio'=>2     
         ));
-        DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas OFF');
+        DB::unprepared('SELECT 1; SET IDENTITY_INSERT escuelas OFF');*/
     }
 
     /**
