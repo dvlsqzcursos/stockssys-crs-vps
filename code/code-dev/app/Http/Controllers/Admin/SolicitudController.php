@@ -633,11 +633,11 @@ class SolicitudController extends Controller
                     $id_escolar2_racion = $r->id;
                 endif;
 
-                if($r->nombre =="Lideres"):
+                if($r->nombre =="Líderes"):
                     $id_lideres_racion = $r->id;
                 endif;
 
-                if($r->nombre =="Docentes y Voluntarios"):
+                if($r->nombre =="Voluntarios"):
                     $id_do_vo_racion = $r->id;
                 endif;                
             endforeach;
@@ -1166,7 +1166,7 @@ class SolicitudController extends Controller
                 $id_escolar2_racion = $r->id;
             endif;
 
-            if($r->nombre =="Lideres"):
+            if($r->nombre =="Líderes"):
                 $id_lideres_racion = $r->id;
             endif;
 
