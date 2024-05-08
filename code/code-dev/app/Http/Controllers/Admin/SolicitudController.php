@@ -662,7 +662,7 @@ class SolicitudController extends Controller
                 ->groupBy('escuelas.id', 'solicitud_detalles.tipo_de_actividad_alimentos', 'alimentos_racion.peso')
                 ->get();
             
-                return $det_escuelas_preprimaria;
+                //return $det_escuelas_preprimaria;
 
             if(isset($id_escolar2_racion) ):
                 //return $id_escolar2_racion;
