@@ -1,3 +1,6 @@
+<?php set_time_limit(0);
+ini_set("memory_limit",-1);
+ini_set('max_execution_time', 0); ?>
 @extends('admin.plantilla.master')
 @section('title','Solicitud A Bodega Primaria')
 
@@ -5,7 +8,7 @@
     <li class="breadcrumb-item"><a href="{{ url('/admin/escuelas') }}"><i class="fa-solid fa-route"></i> Solicitud de Despacho</a></li>
     <li class="breadcrumb-item"><a href="{{ url('/admin/escuela/registrar') }}"><i class="fa-solid fa-route"></i> Registrar Solicitud de Despacho</a></li>
 @endsection
-
+ 
 @section('content')
 <div class="container-fluid">
     <div class="row">       
