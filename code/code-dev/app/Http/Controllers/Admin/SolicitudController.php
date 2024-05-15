@@ -1408,12 +1408,13 @@ class SolicitudController extends Controller
                     case 'solicitud_racion_psc':
                         $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_docentes_y_voluntarios');
                         $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones_de_docentes_y_voluntarios');
-                        return $total_beneficiarios;
+                        
                     break;
 
                     case 'lideres_de_alimentacion_escolar':
                         $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_personas');
                         $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones');
+                        return $total_beneficiarios;
                     break;
 
 
