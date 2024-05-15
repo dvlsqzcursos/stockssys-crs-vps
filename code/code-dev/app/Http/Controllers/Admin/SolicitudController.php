@@ -1399,6 +1399,7 @@ class SolicitudController extends Controller
 
                 switch($racion->tipo_alimentos):
                     case 'solicitud_comida_escolar':
+                        
                         $total_beneficiarios = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_estudiantes');
                         $total_raciones = SolicitudDetalles::where('id_solicitud', $request->input('idSolicitud'))->sum('total_de_raciones_de_estudiantes');
                         return $total_beneficiarios;
