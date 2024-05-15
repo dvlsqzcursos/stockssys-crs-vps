@@ -28,7 +28,7 @@ ini_set('max_execution_time', 0); ?>
                                     @if($det_preprimaria_enc->escuela_id == $e->escuela_id)    
                                         Racion:  <b> {{ $det_preprimaria_enc->racion}}</b> &nbsp                                    
                                         Dias: <b>{{ $det_preprimaria_enc->dias}} </b>&nbsp
-                                        Total Beneficiarios:   <b>{{ $det_preprimaria_enc->total_beneficiarios}}  </b>
+                                        Total Beneficiarios:  <b>{{ $det_preprimaria_enc->total_beneficiarios}}  </b>
                                     @endif                                   
                                 @endforeach 
                                 <br>
@@ -136,7 +136,7 @@ ini_set('max_execution_time', 0); ?>
                                         <div class="input-group">           
                                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                                             {!! Form::hidden('idEscuela', $e->escuela_id, ['class'=>'form-control']) !!}   
-                                            {!! Form::hidden('idSolicitud', $solicitud, ['class'=>'form-control']) !!}  
+                                            {!! Form::hidden('idSolicitud', $solicitud, ['class'=>'form-control']) !!}   
                                             {!! Form::text('no_boleta',0, ['class'=>'form-control','required']) !!}            
                                         </div>
                                     </div>   
