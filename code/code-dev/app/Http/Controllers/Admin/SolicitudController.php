@@ -1708,10 +1708,8 @@ class SolicitudController extends Controller
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             foreach($saldos as $s):
                 if($s->id_insumo == $alimentos[$cont]->id_alimento ):
-                    if($s->disponible > 0 ):
+                    if($s->disponible != 0 ):
                         $detalle->pl = $s->pl;
-                    else:
-                        $detalle->pl = 0;
                     endif;
                 endif;
             endforeach;    
