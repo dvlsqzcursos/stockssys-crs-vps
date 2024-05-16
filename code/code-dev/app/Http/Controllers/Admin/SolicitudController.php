@@ -1485,7 +1485,7 @@ class SolicitudController extends Controller
             $actividad = $r->id;
             $alimentos = $r->alimentos;
         endforeach;
-        //return $saldos;
+        return $saldos;
         //return $request->all();
 
         $descarga =  DB::table('solicitud_detalles')
@@ -1537,7 +1537,7 @@ class SolicitudController extends Controller
                 endif;
             endforeach;    
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
-            return $detalle->no_unidades;
+            
             $detalle->save();
             $cont=$cont+1;
         }
