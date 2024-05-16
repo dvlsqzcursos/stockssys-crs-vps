@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Solicitud, App\Models\SolicitudDetalles,App\Models\Institucion, App\Models\Bodega, App\Models\Escuela, App\Models\Entrega;
 use App\Models\Ruta, App\Models\RutaEscuela,  App\Models\RutaSolicitud,  App\Models\RutaSolicitudDetalles,  App\Models\Racion, App\Models\BodegaEgreso, App\Models\BodegaEgresoDetalle;
+use App\Models\BodegaIngreso, App\Models\BodegaIngresoDetalle;
 use App\Models\AlimentoRacion, App\Models\Usuario, App\Models\Bitacora, App\Models\SolicitudBodegaPrimaria, App\Models\SolicitudBodegaPrimariaDetalle;
 use DB, Validator, Auth, Hash, Config, Carbon\Carbon, Illuminate\Support\Arr;
 use App\Imports\SolicitudDetallesImport;
