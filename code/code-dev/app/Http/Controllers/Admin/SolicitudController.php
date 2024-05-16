@@ -1706,13 +1706,7 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            foreach($saldos as $s):
-                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
-                    if($s->disponible > 0 ):
-                        $detalle->pl = $s->pl;
-                    endif;
-                endif;
-            endforeach;    
+              
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
             $detalle->save();
             $cont=$cont+1;
