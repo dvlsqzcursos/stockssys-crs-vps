@@ -1657,7 +1657,7 @@ class SolicitudController extends Controller
         ->orderBy('bi_det.bubd')
         ->get();
 
-        $racion = Racion::with('alimentos')->where('nombre', 'like', '%voluntario')->where('id_institucion', Auth::user()->id_institucion)->get();
+        $racion = Racion::with('alimentos')->where('nombre', 'like', '%voluntarios')->where('id_institucion', Auth::user()->id_institucion)->get();
         foreach($racion  as $r):
             $actividad = $r->id;
             $alimentos = $r->alimentos;
