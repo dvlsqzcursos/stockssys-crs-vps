@@ -1707,15 +1707,13 @@ class SolicitudController extends Controller
         while ($cont<count($alimentos)) {
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
-            $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-                     
-            return BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->whereRaw('no_unidades-no_unidades_usadas > 0')->orderBy('bubd')->first();
-                 
+            $detalle->id_insumo = $alimentos[$cont]->id_alimento;                  
+            $detalle->pl = BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->whereRaw('no_unidades-no_unidades_usadas > 0')->orderBy('bubd')->first();     
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
-            
+            $detalle->save();
             $cont=$cont+1;
         }
-        $detalle->save();
+        
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones de voluntarios para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$idSolicitud;
