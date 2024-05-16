@@ -1478,7 +1478,7 @@ class SolicitudController extends Controller
         ->orderBy('bi_det.bubd')
         ->get();
 
-        return $saldos;
+        
 
         $racion = Racion::with('alimentos')->where('nombre', 'like', '%escolar')->where('id_institucion', Auth::user()->id_institucion)->get();
         foreach($racion  as $r):
@@ -1537,6 +1537,7 @@ class SolicitudController extends Controller
                 endif;
             endforeach;    
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
+            return $detalle->no_unidades;
             $detalle->save();
             $cont=$cont+1;
         }
