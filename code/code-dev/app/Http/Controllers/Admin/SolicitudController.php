@@ -1711,7 +1711,7 @@ class SolicitudController extends Controller
             $pl_disponible = BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->whereRaw('no_unidades-no_unidades_usadas > 0')->orderBy('bubd')->first();  
             $detalle->pl =  $pl_disponible->pl; 
             
-            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
+            $detalle->no_unidades =  (($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110);
             $detalle->save();
             $cont=$cont+1;
         }
