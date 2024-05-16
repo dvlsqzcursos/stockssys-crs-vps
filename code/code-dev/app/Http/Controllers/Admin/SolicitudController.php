@@ -1657,7 +1657,7 @@ class SolicitudController extends Controller
         ->where('b.tipo_bodega', 1) 
         ->orderBy('bi_det.bubd')
         ->get();
-        return $saldos;
+        //return $saldos;
         $racion = Racion::with('alimentos')->where('nombre', 'like', '%voluntarios')->where('id_institucion', Auth::user()->id_institucion)->get();
         foreach($racion  as $r):
             $actividad = $r->id;
@@ -1709,9 +1709,8 @@ class SolicitudController extends Controller
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             foreach($saldos as $s):
                 if($s->id_insumo == $alimentos[$cont]->id_alimento ):
-                    if($s->disponible != 0 ):
+                    
                         $detalle->pl = $s->pl;
-                    endif;
                 endif;
             endforeach;    
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
