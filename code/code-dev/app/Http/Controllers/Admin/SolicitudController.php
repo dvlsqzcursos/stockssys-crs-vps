@@ -1689,7 +1689,7 @@ class SolicitudController extends Controller
         $be->id_institucion = Auth::user()->id_institucion;
         $be->save();
 
-
+        $cont = 0;
         while ($cont<count($alimentos)) {
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
