@@ -1654,9 +1654,10 @@ class SolicitudController extends Controller
         ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
         ->where('b.id_institucion', Auth::user()->id_institucion)  
         ->where('b.tipo_bodega', 1) 
+        ->where(('bi_det.no_unidades - bi_det.no_unidades_usadas') > 0)
         ->orderBy('bi_det.bubd')
         ->get();
-
+        return $saldos;
         $racion = Racion::with('alimentos')->where('nombre', 'like', '%voluntarios')->where('id_institucion', Auth::user()->id_institucion)->get();
         foreach($racion  as $r):
             $actividad = $r->id;
