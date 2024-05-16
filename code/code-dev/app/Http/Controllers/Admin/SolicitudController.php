@@ -1707,12 +1707,9 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            foreach($saldos as $s):
-                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
-                    
-                        $detalle->pl = $s->pl;
-                endif;
-            endforeach;    
+                     
+            return BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->where('no_unidades','-','no_unidades_usadas','>','0');
+                 
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
             
             $cont=$cont+1;
