@@ -1709,7 +1709,7 @@ class SolicitudController extends Controller
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
                      
-            return BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->where('no_unidades','-','no_unidades_usadas','>','0')->get();
+            return BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$cont]->id_alimento)->whereRaw('no_unidades-no_unidades_usadas > 0')->get();
                  
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
             
