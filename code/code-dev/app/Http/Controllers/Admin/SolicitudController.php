@@ -1530,13 +1530,7 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            foreach($saldos as $s):
-                if($s->id_insumo == $alimentos[$cont]->id_alimento && $s->disponible > 0 ):
-                    
-                    $detalle->pl = $s->pl;
-                    
-                endif;
-            endforeach;    
+            $detalle->pl = 0;   
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
             
             $detalle->save();
@@ -1618,13 +1612,7 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            foreach($saldos as $s):
-                if($s->id_insumo == $alimentos[$cont]->id_alimento ):
-                    if($s->disponible > 0 ):
-                        $detalle->pl = $s->pl;
-                    endif;
-                endif;
-            endforeach;    
+            $detalle->pl = 0;  
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
             $detalle->save();
             $cont=$cont+1;
@@ -1652,8 +1640,7 @@ class SolicitudController extends Controller
             DB::RAW('bi_det.bubd as bubd'),
             DB::RAW('(bi_det.no_unidades - bi_det.no_unidades_usadas) as disponible')
         )
-        ->join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
-        ->whereRaw('bi_det.no_unidades-bi_det.no_unidades_usadas > 0')
+        ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
         ->where('b.id_institucion', Auth::user()->id_institucion)  
         ->where('b.tipo_bodega', 1) 
         ->orderBy('bi_det.bubd')
@@ -1703,16 +1690,16 @@ class SolicitudController extends Controller
         $be->save();
 
 
-        for($i =0; $i<count($alimentos); $i++):
+        while ($cont<count($alimentos)) {
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
-            $detalle->id_insumo = $alimentos[$i]->id_alimento;                  
-            $pl_disponible = BodegaIngresoDetalle::select('pl')->where('id', $alimentos[$i]->id_alimento)->whereRaw('no_unidades-no_unidades_usadas > 0')->orderBy('bubd')->first();  
-            $detalle->pl =  $pl_disponible->pl; 
+            $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             
-            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$i]->cantidad)/110)), 2, '.', ',' ) ;
+            $detalle->pl = 0;
+            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
             $detalle->save();
-        endfor;
+            $cont=$cont+1;
+        }
         
 
         $b = new Bitacora;
