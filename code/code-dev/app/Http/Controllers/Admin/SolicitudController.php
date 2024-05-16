@@ -1651,10 +1651,10 @@ class SolicitudController extends Controller
             DB::RAW('bi_det.bubd as bubd'),
             DB::RAW('(bi_det.no_unidades - bi_det.no_unidades_usadas) as disponible')
         )
-        ->Join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
+        ->join('bodegas_ingresos_detalles as bi_det', 'bi_det.id_insumo', 'b.id')
+        ->where('bi_det.no_unidades', '-', 'bi_det.no_unidades_usadas', '!=', '0')
         ->where('b.id_institucion', Auth::user()->id_institucion)  
         ->where('b.tipo_bodega', 1) 
-        ->where('bi_det.no_unidades', '-', 'bi_det.no_unidades_usadas', '!=', '0')
         ->orderBy('bi_det.bubd')
         ->get();
         return $saldos;
