@@ -1714,9 +1714,10 @@ class SolicitudController extends Controller
                 endif;
             endforeach;    
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
-            $detalle->save();
+            
             $cont=$cont+1;
         }
+        $detalle->save();
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones de voluntarios para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$idSolicitud;
