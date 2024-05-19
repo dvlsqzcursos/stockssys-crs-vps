@@ -5,7 +5,7 @@
                 <div class="card ">
 
                     <div class="card-header">                
-                        <h4 class="card-title"><strong><i class="fa-solid fa-school"></i> Desgloce de Despacho: </strong></h4>
+                        <h4 class="card-title"><strong><i class="fa-solid fa-school"></i> Desglose de Despacho: </strong></h4>
                     </div>
 
                     <div class="card-body " style="text-align:center;  overflow-y: scroll; line-height: 1em; height:325px;">    

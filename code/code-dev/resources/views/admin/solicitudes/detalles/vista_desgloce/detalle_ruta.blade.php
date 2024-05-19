@@ -1,7 +1,7 @@
 <div class="card ">
 
     <div class="card-header">                
-        <h2 class="card-title"><strong><i class="fa-solid fa-road-circle-exclamation"></i> Desgloce de la Ruta: {{$ruta->ubicacion->nomenclatura.'0'.$ruta->correlativo}}</strong></h2>
+        <h2 class="card-title"><strong><i class="fa-solid fa-road-circle-exclamation"></i> Desglose de la Ruta: {{$ruta->ubicacion->nomenclatura.'0'.$ruta->correlativo}}</strong></h2>
 
     </div>
 

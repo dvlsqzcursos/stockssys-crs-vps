@@ -25,10 +25,10 @@ return new class extends Migration
             select @idinsumo = id_insumo from inserted;
             select @pl = pl from inserted;
             set @saldo = (select saldo from bodegas where id = @idinsumo);
-            set @no_unidades_usadas = (select no_unidades_usadas from bodegas_ingresos_detalles where pl = @pl or id_insumo = @idinsumo);
+            set @no_unidades_usadas = (select no_unidades_usadas from bodegas_ingresos_detalles where pl = @pl or id_insumo = @idinsumo and no_unidades - no_unidades_usadas > 0) ;
             begin
             update bodegas set saldo = saldo-@cantidad where id = @idinsumo;
-            update bodegas_ingresos_detalles set no_unidades_usadas = no_unidades_usadas+@cantidad where  pl = @pl or id_insumo = @idinsumo;
+            update bodegas_ingresos_detalles set no_unidades_usadas = no_unidades_usadas+@cantidad where  pl = @pl or id_insumo = @idinsumo and no_unidades - no_unidades_usadas > 0;
             end        
         ');
         /*DB::unprepared('

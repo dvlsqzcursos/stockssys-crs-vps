@@ -3,7 +3,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ url('/admin/rutas') }}"><i class="fa-solid fa-route"></i> Rutas</a></li>
-    <li class="breadcrumb-item"><a href="{{ url('/admin/ruta'.$ruta->id.'/asignar_escuelas') }}"><i class="fa-solid fa-school"></i> Asginar Escuealas</a></li>
+    <li class="breadcrumb-item"><a href="{{ url('/admin/ruta'.$ruta->id.'/asignar_escuelas') }}"><i class="fa-solid fa-school"></i> Asignar Escuealas</a></li>
 @endsection
 
 @section('content')
