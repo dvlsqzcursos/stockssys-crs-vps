@@ -56,7 +56,7 @@
         </div>
 
         <div style="position: relative; top: 18mm; left: 156mm;  width: 250px; height: 10px; font-size: 12px;">
-            {{ $d->participantes }}           
+            {{ obtenerMeses(null, $d->solicitud->entrega->mes_inicial).' - '.obtenerMeses(null, $d->solicitud->entrega->mes_final) }}        
         </div>
 
         <div style="position: relative; top: 34mm; left: 156mm;  width: 250px; height: 10px; font-size: 12px;" >

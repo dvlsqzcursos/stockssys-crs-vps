@@ -164,7 +164,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'UserStatus', 'Perm
     Route::get('/solicitud_despacho/{id}/solicitud_bodega_primaria', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudABodegaPrimaria'])->name('solicitud_rutas');
     Route::post('/solicitud_despacho/solicitud_bodega_primaria', [App\Http\Controllers\Admin\SolicitudController::class, 'postSolicitudABodegaPrimaria'])->name('solicitud_rutas');
     Route::get('/solicitud_despacho/{id}/escuelas', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudEscuelas'])->name('solicitud_escuelas');
-    Route::get('/solicitud_despacho/{id}/escuela/{idEscuela}', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudEscuelaDespacho'])->name('solicitud_rutas');
+    Route::get('/solicitud_despacho/{id}/escuela/{idEscuela}', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudEscuelaDespacho'])->name('solicitud_rutas'); 
     Route::get('/solicitud_despacho/{idSolicitud}/escuela/{idEscuela}/despacho/{id}/impresion', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudEscuelaDespachoPDF'])->name('solicitud_rutas');
     Route::get('/solicitud_despacho/{idSolicitud}/ruta_confirmada/{idRuta}/boleta/impresion', [App\Http\Controllers\Admin\SolicitudController::class, 'getSolicitudRutaConfirmadaPDF'])->name('solicitud_rutas');
     Route::post('/solicitud_despacho/despachar/escolar', [App\Http\Controllers\Admin\SolicitudController::class, 'postDespacharEscolares'])->name('solicitud_rutas');
