@@ -51,6 +51,14 @@
             {{ $d->racion->nombre}}           
         </div>
 
+        <div style="position: relative; top: 18mm; left: 156mm;  width: 250px; height: 10px; font-size: 12px;">
+            {{ $d->participantes }}           
+        </div>
+
+        <div style="position: relative; top: 18mm; left: 156mm;  width: 250px; height: 10px; font-size: 12px;">
+            {{ $d->participantes }}           
+        </div>
+
         <div style="position: relative; top: 34mm; left: 156mm;  width: 250px; height: 10px; font-size: 12px;" >
             {{ $d->escuela->ubicacion->nombre}}           
         </div>
@@ -96,7 +104,7 @@
                                 {{$a->cantidad}}
                             @endif
                         @endforeach
-                    @endif
+                    @endif 
                 @endforeach
             </div>
 
