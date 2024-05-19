@@ -1539,7 +1539,14 @@ class SolicitudController extends Controller
 
         $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where('id_egreso',$be->id)->get();
 
-        return $detalles_actuales;
+        foreach($detalles_actuales as $det):
+            foreach($pls as $pl):
+                if($pl->id == $det->id_insumo):
+                    $det->pl = $pl->pl;   
+                endif;
+            endforeach;
+            $det->save();
+        endforeach;
 
         
 
