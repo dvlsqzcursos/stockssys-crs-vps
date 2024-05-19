@@ -51,11 +51,11 @@
             {{ $d->racion->nombre}}           
         </div>
 
-        <div style="position: relative; top: 17.2mm; left: 170mm;  width: 250px; height: 10px; font-size: 12px;">
+        <div style="position: relative; top: 18.2mm; left: 170mm;  width: 250px; height: 10px; font-size: 12px;">
             {{ $d->participantes }}           
         </div>
 
-        <div style="position: relative; top: 25.2mm; left: 180mm;  width: 250px; height: 10px; font-size: 12px;">
+        <div style="position: relative; top: 20.2mm; left: 180mm;  width: 250px; height: 10px; font-size: 12px;">
             {{ obtenerMeses(null, $d->solicitud->entrega->mes_inicial).' - '.obtenerMeses(null, $d->solicitud->entrega->mes_final) }}        
         </div>
 
