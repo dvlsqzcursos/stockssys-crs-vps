@@ -1532,10 +1532,11 @@ class SolicitudController extends Controller
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             $detalle->pl = 0;   
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
-            
             $detalle->save();
             $cont=$cont+1;
         }
+
+        return BodegaIngresoDetalle::select('id','pl')->where('no_unidades - no_unidades_usadas > 0')->get();
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones escolares para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
