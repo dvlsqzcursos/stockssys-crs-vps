@@ -112,9 +112,9 @@
 
                 @foreach($det->alimento_bodega_socio->pesos_alimento as $p) 
                         @if(Illuminate\Support\Str::lower($det->alimento_bodega_socio->nombre) != "aceite")
-                            {{ $det->no_unidades*$p->libras_x_unidad}} 
+                            {{ number_format(  $det->no_unidades*$p->libras_x_unidad , 2, '.', ',' )}} 
                         @else
-                            {{ $det->no_unidades*20}} 
+                            {{number_format(  $det->no_unidades*20, 2, '.', ',' )}} 
                         @endif
                        
                 @endforeach    
