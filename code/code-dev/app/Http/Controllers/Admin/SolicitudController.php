@@ -1536,7 +1536,7 @@ class SolicitudController extends Controller
             $cont=$cont+1;
         }
 
-        return BodegaIngresoDetalle::select('id','pl')->where('no_unidades - no_unidades_usadas','>',0)->get();
+        return BodegaIngresoDetalle::select('id','pl')->whereRaw('(no_unidades - no_unidades_usadas) > 0')->get();
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones escolares para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
