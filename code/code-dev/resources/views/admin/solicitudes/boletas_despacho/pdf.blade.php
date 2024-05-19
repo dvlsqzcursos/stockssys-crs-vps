@@ -121,7 +121,7 @@
             </div> 
 
             <div style="position: relative; top: 50mm; left: 65mm; display:inline-block; padding-top:0px; padding-bottom:0px;  width: 50px; height: 10px; font-size: 12px;" >
-                {{ $det->no_unidades}}    
+                {{ number_format( $det->no_unidades , 2, '.', ',' )}}    
             </div> <br>
             
         @endforeach        
