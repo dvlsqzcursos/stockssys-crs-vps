@@ -1619,6 +1619,7 @@ class SolicitudController extends Controller
         $be->id_institucion = Auth::user()->id_institucion;
         $be->save();
 
+        $pls = BodegaIngresoDetalle::select('id','pl')->whereRaw('(no_unidades - no_unidades_usadas) > 0')->get();
         $cont=0;
 
         while ($cont<count($alimentos)) {
@@ -1630,6 +1631,17 @@ class SolicitudController extends Controller
             $detalle->save();
             $cont=$cont+1;
         }
+
+        $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where('id_egreso',$be->id)->get();
+
+        foreach($detalles_actuales as $det):
+            foreach($pls as $pl):
+                if($pl->id == $det->id_insumo):
+                    $det->pl = $pl->pl;   
+                endif;
+            endforeach;
+            $det->save();
+        endforeach;
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones de lideres para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
@@ -1701,7 +1713,7 @@ class SolicitudController extends Controller
         $be->tipo_bodega = 1;
         $be->id_institucion = Auth::user()->id_institucion;
         $be->save();
-
+        $pls = BodegaIngresoDetalle::select('id','pl')->whereRaw('(no_unidades - no_unidades_usadas) > 0')->get();
         $cont = 0;
         while ($cont<count($alimentos)) {
             $detalle=new BodegaEgresoDetalle();
@@ -1713,6 +1725,17 @@ class SolicitudController extends Controller
             $detalle->save();
             $cont=$cont+1;
         }
+
+        $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where('id_egreso',$be->id)->get();
+
+        foreach($detalles_actuales as $det):
+            foreach($pls as $pl):
+                if($pl->id == $det->id_insumo):
+                    $det->pl = $pl->pl;   
+                endif;
+            endforeach;
+            $det->save();
+        endforeach;
         
 
         $b = new Bitacora;
