@@ -1537,7 +1537,7 @@ class SolicitudController extends Controller
             $cont=$cont+1;
         }
 
-        $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where($be->id)-get();
+        $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where($be->id)->get();
 
         return $detalle;
 
