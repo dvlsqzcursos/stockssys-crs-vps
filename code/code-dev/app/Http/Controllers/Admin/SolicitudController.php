@@ -1537,7 +1537,7 @@ class SolicitudController extends Controller
             $cont=$cont+1;
         }
 
-        $detalle = BodegaEgresoDetalle::get();
+        $detalle_actual = BodegaEgresoDetalle::findOrFail($detalle->id);
 
         return $detalle;
 
