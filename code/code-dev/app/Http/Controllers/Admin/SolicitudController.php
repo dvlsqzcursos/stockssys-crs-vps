@@ -1539,7 +1539,7 @@ class SolicitudController extends Controller
 
         $detalles_actuales = BodegaEgresoDetalle::where('pl', NULL)->where('id_egreso',$be->id)->get();
 
-        return $detalle;
+        return $detalles_actuales;
 
         
 
