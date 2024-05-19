@@ -1511,6 +1511,7 @@ class SolicitudController extends Controller
         endforeach;
 
         //return Carbon::now()->format('Y-m-d');
+        $pls = BodegaIngresoDetalle::select('id','pl')->whereRaw('(no_unidades - no_unidades_usadas) > 0')->get();
 
         $be = new BodegaEgreso;
         $be->fecha = Carbon::now()->format('Y-m-d');
@@ -1530,13 +1531,17 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            $detalle->pl = 0;   
+            foreach($pls as $pl):
+                if($pl->id == $detalle->id_insumo):
+                    $detalle->pl = $pl->pl;   
+                endif;
+            endforeach;
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
             $detalle->save();
             $cont=$cont+1;
         }
 
-        return BodegaIngresoDetalle::select('id','pl')->whereRaw('(no_unidades - no_unidades_usadas) > 0')->get();
+        
 
         $b = new Bitacora;
         $b->accion = 'Despacho automatico de raciones escolares para la escuela: '.$escuela->codigo.' '.$escuela->nombre.' correspondiente a la solicitud no. '.$request->input('idSolictiud');
