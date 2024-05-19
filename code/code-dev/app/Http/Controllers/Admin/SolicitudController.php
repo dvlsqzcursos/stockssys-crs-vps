@@ -1531,15 +1531,13 @@ class SolicitudController extends Controller
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
-            foreach($pls as $pl):
-                if($pl->id == $detalle->id_insumo):
-                    $detalle->pl = $pl->pl;   
-                endif;
-            endforeach;
+            
             $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/1000)/50), 2, '.', ',' ) ;
             $detalle->save();
             $cont=$cont+1;
         }
+
+        return $detalle->id;
 
         
 
