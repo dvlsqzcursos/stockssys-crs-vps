@@ -151,7 +151,7 @@
                                             <select name="id_escuela" id="id_escuela" style="width: 90%" >
                                                 @foreach($escuelas as $e)
                                                     <option value=""></option>
-                                                    <option value="{{ $e->id }}">{{ $e->codigo.' - '.$e->nombre}}</option>
+                                                    <option value="{{ $e->id }}">{{ $e->id.' - '.$e->codigo.' - '.$e->nombre}}</option>
                                                 @endforeach
                                             </select>            
                                         </div>
