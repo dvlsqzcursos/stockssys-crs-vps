@@ -780,8 +780,6 @@ class SolicitudController extends Controller
 
         endif;        
 
-        return $escuelas;
-
         return view('admin.solicitudes.detalles.rutas_desgloce',$datos);
     }
 
