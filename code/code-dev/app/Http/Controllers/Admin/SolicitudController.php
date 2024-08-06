@@ -571,8 +571,9 @@ class SolicitudController extends Controller
         
         $idSolicitud = $id;
         
-        $escuelas = DB::table('escuelas')
-                    ->join('rutas_escuelas', 'rutas_escuelas.id_escuela','escuelas.id')
+        $escuelas = DB::table('escuelas as e')
+                    ->select('e.id', 'e.codigo', 'e.nombre')
+                    ->join('rutas_escuelas', 'rutas_escuelas.id_escuela','e.id')
                     ->where('rutas_escuelas.id_ruta', $idRuta)
                     ->get();
                 
