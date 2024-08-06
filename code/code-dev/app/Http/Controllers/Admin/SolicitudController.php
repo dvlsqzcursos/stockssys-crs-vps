@@ -575,6 +575,7 @@ class SolicitudController extends Controller
                     ->join('rutas_escuelas', 'rutas_escuelas.id_escuela','escuelas.id')
                     ->where('rutas_escuelas.id_ruta', $idRuta)
                     ->get();
+                
 
         $nombre_ruta = $ruta->ubicacion->nomenclatura.'0'.$ruta->correlativo;
 
@@ -777,6 +778,8 @@ class SolicitudController extends Controller
             ];
 
         endif;        
+
+        return $escuelas;
 
         return view('admin.solicitudes.detalles.rutas_desgloce',$datos);
     }
