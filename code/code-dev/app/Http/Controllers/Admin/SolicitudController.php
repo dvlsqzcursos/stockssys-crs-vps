@@ -1178,7 +1178,7 @@ class SolicitudController extends Controller
             endif;                
         endforeach;
 
-        return $id_escolar2_racion;
+        //return $id_escolar2_racion;
 
         $escuelas = DB::table('solicitud_detalles')
             ->select(
@@ -1233,7 +1233,7 @@ class SolicitudController extends Controller
                 )
                 ->join('raciones', 'raciones.id', 'solicitud_detalles.tipo_de_actividad_alimentos')
                 ->where('solicitud_detalles.id_solicitud', $solicitud)  
-                ->where('solicitud_detalles.tipo_de_actividad_alimentos', $id_escolar2_racion)                
+                ->where('solicitud_detalles.tipo_de_actividad_alimentos', $id_escolar_racion)                
                 ->where('solicitud_detalles.deleted_at', null)
                 ->groupBy('solicitud_detalles.id_escuela', 'raciones.nombre')
                 ->get();
@@ -1252,7 +1252,7 @@ class SolicitudController extends Controller
                 })
                 ->join('bodegas', 'bodegas.id', 'alimentos_racion.id_alimento')
                 ->where('solicitud_detalles.id_solicitud', $solicitud)  
-                ->where('solicitud_detalles.tipo_de_actividad_alimentos', $id_escolar2_racion)                
+                ->where('solicitud_detalles.tipo_de_actividad_alimentos', $id_escolar_racion)                
                 ->where('solicitud_detalles.deleted_at', null)
                 ->groupBy('solicitud_detalles.id_escuela', 'solicitud_detalles.tipo_de_actividad_alimentos', 'bodegas.id', 'bodegas.nombre', 'alimentos_racion.cantidad')
                 ->get();
