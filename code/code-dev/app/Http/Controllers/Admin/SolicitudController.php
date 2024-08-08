@@ -1178,6 +1178,8 @@ class SolicitudController extends Controller
             endif;                
         endforeach;
 
+        return $id_escolar2_racion;
+
         $escuelas = DB::table('solicitud_detalles')
             ->select(
                 DB::raw('escuelas.id as escuela_id'),
