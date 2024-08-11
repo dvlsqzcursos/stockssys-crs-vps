@@ -1627,11 +1627,12 @@ class SolicitudController extends Controller
         $cont=0;
 
         while ($cont<count($alimentos)) {
+            $unidades_despachar = number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' );
             $detalle=new BodegaEgresoDetalle();
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             $detalle->pl = 0;  
-            $detalle->no_unidades =  number_format( ((($dias*$beneficiarios*$alimentos[$cont]->cantidad)/110)), 2, '.', ',' ) ;
+            $detalle->no_unidades =  $unidades_despachar;
             $detalle->save();
             $cont=$cont+1;
         }
