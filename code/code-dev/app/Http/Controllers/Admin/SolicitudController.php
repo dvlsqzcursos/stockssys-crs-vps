@@ -1632,7 +1632,7 @@ class SolicitudController extends Controller
             $detalle->id_egreso = $be->id;
             $detalle->id_insumo = $alimentos[$cont]->id_alimento;        
             $detalle->pl = 0;  
-            $detalle->no_unidades =  $unidades_despachar;
+            $detalle->no_unidades = $unidades_despachar;
             $detalle->save();
             $cont=$cont+1;
         }
